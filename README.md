@@ -1,4 +1,8 @@
 # Box2v
-Bindings for Box2d
+Vlang bindings for Box2d
 
-## In Progress for windows
+### In Progress for windows
+
+Notes- 
+
+Renamed type field in B2BodyDef to types to deal with restricted name conflict.
