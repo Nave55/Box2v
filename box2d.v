@@ -12,7 +12,7 @@ $if windows {
 
 // start math_functions
 
-const b2_pi = 3.14159265359
+pub const b2_pi = 3.14159265359
 
 // 2D vector
 // This can be used to represent a point or free vector
