@@ -4,7 +4,7 @@ import math
 
 #include "box2d.h"
 
-#flag -L @VMODROOT\include]bin
+#flag -L @VMODROOT\include\bin
 
 $if windows {
 	#flag -l:libbox2d.a
