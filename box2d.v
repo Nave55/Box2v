@@ -1,13 +1,15 @@
 import math
 
-#flag -IC:\Users\navez\Downloads\box2c\include\box2d
+#flag -I @VMODROOT\include\box2d
 // #flag -IC:\Users\navez\Downloads\box2c\src
 
 #include "box2d.h"
 
-#flag -LC:\Users\navez\Downloads\box2c
-#flag -l:libbox2d.a
+#flag -L @VMODROOT\include]bin
 
+$if windows {
+	#flag -l:libbox2d.a
+}
 
 // start math_functions
 
