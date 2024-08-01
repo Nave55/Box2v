@@ -5,4 +5,4 @@ Vlang bindings for Box2d
 
 Notes- 
 
-Renamed type field in B2BodyDef to types to deal with restricted name conflict.
+Renamed 'type' field in B2BodyDef to 'types' to deal with restricted name conflict.
