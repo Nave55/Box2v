@@ -1886,7 +1886,7 @@ enum B2BodyType {
 struct C.b2BodyDef {
 pub mut:
 	/// The body type: static, kinematic, or dynamic.
-	type0 B2BodyType 
+	types B2BodyType 
 
 	/// The initial world position of the body. Bodies should be created with the desired position.
 	/// @note Creating bodies at the origin and then moving them nearly doubles the cost of body creation, especially
