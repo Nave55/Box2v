@@ -1,7 +1,6 @@
 import math
 
 #flag -I @VMODROOT\include\box2d
-// #flag -IC:\Users\navez\Downloads\box2c\src
 
 #include "box2d.h"
 
