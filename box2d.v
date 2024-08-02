@@ -1865,7 +1865,7 @@ pub type WorldDef = C.b2WorldDef
 // The body simulation type.
 // Each body is one of these three types. The type determines how the body behaves in the simulation.
 // @ingroup body
-enum BodyType {
+pub enum BodyType {
 	// zero mass, zero velocity, may be manually moved
 	static_body = 0
 
@@ -2012,7 +2012,7 @@ pub type QueryFilter = C.b2QueryFilter
 
 // Shape type
 // @ingroup shape
-enum ShapeType {
+pub enum ShapeType {
 	// A circle with an offset
 	circle_shape
 
@@ -2178,7 +2178,7 @@ pub mut:
 
 pub type Counters = C.b2Counters
 
-enum JointType {
+pub enum JointType {
 	distance_joint
 	motor_joint
 	mouse_joint
@@ -2757,7 +2757,7 @@ pub type OverlapResultFcn = fn(ShapeId, voidptr) bool
 pub type CastResultFcn = fn(ShapeId, Vec2, Vec2, f32, voidptr) f32
 
 // These colors are used for debug draw.
-enum HexColor {
+pub enum HexColor {
 	color_alice_blue = 0xf0f8ff
 	color_antique_white = 0xfaebd7
 	color_aqua = 0x00ffff
