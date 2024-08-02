@@ -614,17 +614,17 @@ fn (a Vec2) == (b Vec2) bool {
 // start base
 
 // Prototype for user allocation function
-pub type AllocFcn = fn(u32, int) voidptr
+pub type AllocFcn = fn(size u32, alignment int) voidptr
 // Prototype for user free function
-pub type FreeFcn = fn(voidptr)
+pub type FreeFcn = fn(mem voidptr)
 // Prototype for the user assert callback. Return 0 to skip the debugger break.
-pub type AssertFcn = fn(&char, &char, int) int
+pub type AssertFcn = fn(condition &char, fileName &char, lineNumber int) int
 
 // This allows the user to override the allocation functions. These should be
 //	set during application startup.
-fn C.b2SetAllocator(allocFcn AllocFcn, freeFcn FreeFcn)
+fn C.b2SetAllocator(allocFcn &AllocFcn, freeFcn &FreeFcn)
 @[inline]
-pub fn set_allocator(allocFcn AllocFcn, freeFcn FreeFcn) {
+pub fn set_allocator(allocFcn &AllocFcn, freeFcn &FreeFcn) {
 	C.b2SetAllocator(allocFcn, freeFcn)
 }
 
@@ -678,6 +678,12 @@ fn C.b2SleepMilliseconds(milliseconds int)
 @[inline]
 pub fn sleep_milliseconds(milliseconds int) {
 	C.b2SleepMilliseconds(milliseconds)
+}
+
+fn C.b2Yield() 
+@[inline]
+pub fn yield() {
+	C.b2Yield()
 }
 
 // Version numbering scheme.
@@ -849,7 +855,7 @@ pub mut:
 	iterations int
 
 	// Did the cast hit?
-	hit int
+	hit bool
 }
 
 pub type CastOutput = C.b2CastOutput
@@ -1216,7 +1222,6 @@ struct C.b2TreeNode {
 	// Category bits for collision filtering
 	categoryBits u32 // 4
 
-
 	// The node parent index
 	parent int
 
@@ -1286,9 +1291,9 @@ struct C.b2DynamicTree {
 pub type DynamicTree = C.b2DynamicTree
 
 
-pub type TreeQueryCallbackFcn = fn(int, int voidptr) bool
-pub type TreeRayCastCallbackFcn = fn(&RayCastInput, int, int voidptr) f32
-pub type TreeShapeCastCallbackFcn = fn(&ShapeCastInput, int, int, voidptr) f32
+pub type TreeQueryCallbackFcn = fn(proxyId int, userData int, context voidptr) bool
+pub type TreeRayCastCallbackFcn = fn(input &RayCastInput, proxyId int, userData int, context voidptr) f32
+pub type TreeShapeCastCallbackFcn = fn(input &ShapeCastInput, proxyId int, userData int, context voidptr) f32
 
 
 // Validate ray cast input data (NaN, etc)
@@ -1403,6 +1408,13 @@ fn C.b2PointInCircle(point Vec2, shape &Circle) bool
 @[inline]
 pub fn point_in_circle(point Vec2, shape &Circle) bool {
 	return C.b2PointInCircle(point, shape)
+}
+
+// Test a point for overlap with a circle in local space
+fn C.b2PointInCapsule(point Vec2, shape &Capsule) bool
+@[inline]
+pub fn point_in_capsule(point Vec2, shape &Capsule) bool {
+	return C.b2PointInCapsule(point, shape)
 }
 
 // Test a point for overlap with a convex polygon in local space
@@ -1787,9 +1799,9 @@ pub fn dynamic_tree_get_aabb(tree &DynamicTree , proxyId int) AABB {
 
 // start types 
 
-type TaskCallback = fn(int, int, u32, voidptr) 
-type EnqueueTaskCallback = fn(&TaskCallback, int, int, voidptr, voidptr) voidptr
-type FinishTaskCallback = fn(voidptr, voidptr)
+type TaskCallback = fn(startIndex int, endIndex int, workerIndex u32, taskContext voidptr) 
+type EnqueueTaskCallback = fn(task &TaskCallback, itemCount int, minRange int, taskContext voidptr, userContext voidptr) voidptr
+type FinishTaskCallback = fn(userTask voidptr, userContext voidptr)
 
 // Result from b2World_RayCastClosest
 // ingroup world
@@ -2751,10 +2763,10 @@ struct C.b2ContactData {
 
 pub type ContactData = C.b2ContactData
 
-pub type CustomFilterFcn = fn(ShapeId, ShapeId, voidptr) bool
-pub type PreSolveFcn = fn(ShapeId, ShapeId, Manifold, voidptr) bool
-pub type OverlapResultFcn = fn(ShapeId, voidptr) bool
-pub type CastResultFcn = fn(ShapeId, Vec2, Vec2, f32, voidptr) f32
+pub type CustomFilterFcn = fn(shapeIdA ShapeId, shapeIdB ShapeId, context voidptr) bool
+pub type PreSolveFcn = fn(shapeIdA ShapeId, shapeIdB ShapeId, manifold Manifold, context voidptr) bool
+pub type OverlapResultFcn = fn(shapeId ShapeId, context voidptr) bool
+pub type CastResultFcn = fn(shapeId ShapeId, point Vec2, normal Vec2, fraction f32, context voidptr) f32
 
 // These colors are used for debug draw.
 pub enum HexColor {
