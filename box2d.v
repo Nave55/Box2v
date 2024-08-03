@@ -9,6 +9,10 @@ import math
 #flag -L @VMODROOT\include\bin
 
 $if windows {
+	#flag -lbox2d
+}
+
+$if linux {
 	#flag -l:libbox2d.a
 }
 
@@ -614,17 +618,17 @@ fn (a Vec2) == (b Vec2) bool {
 // start base
 
 // Prototype for user allocation function
-pub type AllocFcn = fn(size u32, alignment int) voidptr
+pub type AllocFcn = fn(u32, int) voidptr
 // Prototype for user free function
-pub type FreeFcn = fn(mem voidptr)
+pub type FreeFcn = fn(voidptr)
 // Prototype for the user assert callback. Return 0 to skip the debugger break.
-pub type AssertFcn = fn(condition &char, fileName &char, lineNumber int) int
+pub type AssertFcn = fn(&char, &char, int) int
 
 // This allows the user to override the allocation functions. These should be
 //	set during application startup.
-fn C.b2SetAllocator(allocFcn &AllocFcn, freeFcn &FreeFcn)
+fn C.b2SetAllocator(allocFcn AllocFcn, freeFcn FreeFcn)
 @[inline]
-pub fn set_allocator(allocFcn &AllocFcn, freeFcn &FreeFcn) {
+pub fn set_allocator(allocFcn AllocFcn, freeFcn FreeFcn) {
 	C.b2SetAllocator(allocFcn, freeFcn)
 }
 
@@ -637,9 +641,9 @@ pub fn get_byte_count() int {
 
 // Override the default assert callback
 //	assertFcn a non-null assert callback
-fn C.b2SetAssertFcn(assertFcn &AssertFcn)
+fn C.b2SetAssertFcn(assertFcn AssertFcn)
 @[inline]
-pub fn set_assert_fcn(assertFcn &AssertFcn) {
+pub fn set_assert_fcn(assertFcn AssertFcn) {
 	C.b2SetAssertFcn(assertFcn)
 }
 
@@ -1291,9 +1295,9 @@ struct C.b2DynamicTree {
 pub type DynamicTree = C.b2DynamicTree
 
 
-pub type TreeQueryCallbackFcn = fn(proxyId int, userData int, context voidptr) bool
-pub type TreeRayCastCallbackFcn = fn(input &RayCastInput, proxyId int, userData int, context voidptr) f32
-pub type TreeShapeCastCallbackFcn = fn(input &ShapeCastInput, proxyId int, userData int, context voidptr) f32
+pub type TreeQueryCallbackFcn = fn(int, int, voidptr) bool
+pub type TreeRayCastCallbackFcn = fn(RayCastInput, int, int, voidptr) f32
+pub type TreeShapeCastCallbackFcn = fn(ShapeCastInput, int, int, voidptr) f32
 
 
 // Validate ray cast input data (NaN, etc)
@@ -1799,9 +1803,9 @@ pub fn dynamic_tree_get_aabb(tree &DynamicTree , proxyId int) AABB {
 
 // start types 
 
-type TaskCallback = fn(startIndex int, endIndex int, workerIndex u32, taskContext voidptr) 
-type EnqueueTaskCallback = fn(task &TaskCallback, itemCount int, minRange int, taskContext voidptr, userContext voidptr) voidptr
-type FinishTaskCallback = fn(userTask voidptr, userContext voidptr)
+type TaskCallback =        fn(int, int, u32, voidptr) 
+type EnqueueTaskCallback = fn(TaskCallback, int, int, voidptr, voidptr) voidptr
+type FinishTaskCallback =  fn(voidptr, voidptr)
 
 // Result from b2World_RayCastClosest
 // ingroup world
@@ -1860,10 +1864,10 @@ pub mut:
 	workerCount int
 
 	// Function to spawn tasks
-	enqueueTask &EnqueueTaskCallback 
+	enqueueTask EnqueueTaskCallback 
 
 	// Function to finish a task
-	finishTask &FinishTaskCallback 
+	finishTask FinishTaskCallback
 
 	// User context that is provided to enqueueTask and finishTask
 	userTaskContext voidptr
@@ -1879,16 +1883,16 @@ pub type WorldDef = C.b2WorldDef
 // @ingroup body
 pub enum BodyType {
 	// zero mass, zero velocity, may be manually moved
-	static_body = 0
+	static_body
 
 	// zero mass, velocity set by user, moved by solver
-	kinematic_body = 1
+	kinematic_body
 
 	// positive mass, velocity determined by forces, moved by solver
-	dynamic_body = 2
+	dynamic_body
 
 	// number of body types
-	body_type_count = 3
+	body_type_count
 }
 
 // A body definition holds all the data needed to construct a rigid body.
@@ -3344,8 +3348,6 @@ pub fn world_dump_memory_stats(worldId WorldId) {
 	C.b2World_DumpMemoryStats(worldId)
 }
 
-/** @} */
-
 /**
  * @defgroup body Body
  * This is the body API.
@@ -3838,8 +3840,6 @@ pub fn body_compute_aabb(bodyId BodyId) AABB  {
 	return C.b2Body_ComputeAABB(bodyId) 
 }
 
-/** @} */
-
 /**
  * @defgroup shape Shape
  * Functions to create, destroy, and access.
@@ -4215,8 +4215,6 @@ pub fn chain_is_valid(id ChainId) bool {
 	return C.b2Chain_IsValid(id)
 }
 
-/** @} */
-
 /**
  * @defgroup joint Joint
  * @brief Joints allow you to connect rigid bodies together while allowing various forms of relative motions.
@@ -4485,7 +4483,7 @@ pub fn distance_joint_get_motor_force(jointId JointId) f32 {
 	return C.b2DistanceJoint_GetMotorForce(jointId)
 }
 
-/** @} */
+
 
 /**
  * @defgroup motor_joint Motor Joint
@@ -4575,7 +4573,6 @@ pub fn motor_joint_get_correction_factor(jointId JointId) f32  {
 	return C.b2MotorJoint_GetCorrectionFactor(jointId) 
 }
 
-/**@}*/
 
 /**
  * @defgroup mouse_joint Mouse Joint
@@ -4650,7 +4647,7 @@ pub fn mouse_joint_get_max_force(jointId JointId) f32 {
 	return C.b2MouseJoint_GetMaxForce(jointId) 
 }
 
-/**@}*/
+
 
 /**
  * @defgroup prismatic_joint Prismatic Joint
@@ -4797,7 +4794,7 @@ pub fn prismatic_joint_get_motor_force(jointId JointId) f32 {
 	return C.b2PrismaticJoint_GetMotorForce(jointId)
 }
 
-/** @} */
+
 
 /**
  * @defgroup revolute_joint Revolute Joint
@@ -4943,7 +4940,7 @@ pub fn revolute_joint_get_max_motor_torque(jointId JointId) f32 {
 	return C.b2RevoluteJoint_GetMaxMotorTorque(jointId)
 }
 
-/**@}*/
+
 
 /**
  * @defgroup weld_joint Weld Joint
@@ -5020,7 +5017,7 @@ pub fn weld_joint_get_angular_damping_ratio(jointId JointId) f32 {
 	return C.b2WeldJoint_GetAngularDampingRatio(jointId)
 }
 
-/** @} */
+
 
 /**
  * @defgroup wheel_joint Wheel Joint
