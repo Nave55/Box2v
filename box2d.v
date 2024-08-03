@@ -5166,8 +5166,4 @@ pub fn wheel_joint_get_motor_torque(jointId JointId) f32 {
 	return C.b2WheelJoint_GetMotorTorque(jointId)
 }
 
-/**@}*/
-
-/**@}*/
-
 // end box2d.h
