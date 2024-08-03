@@ -14,7 +14,7 @@ $if windows {
 
 // start math_functions
 
-pub const pi = 3.14159265359
+const pi = 3.14159265359
 
 // 2D vector
 // This can be used to represent a point or free vector
@@ -914,10 +914,10 @@ pub type Capsule = C.b2Capsule
 @[typedef] 
 struct C.b2Polygon {
 	// The polygon vertices
-	vertices [max_polygon_vertices]Vec2 
+	vertices [max_polygon_vertices]Vec2
 
 	// The outward normal vectors of the polygon sides
-	normals [max_polygon_vertices]Vec2 
+	normals [max_polygon_vertices]Vec2
 
 	// The centroid of the polygon
 	centroid Vec2
@@ -1046,7 +1046,7 @@ struct C.b2DistanceInput {
 	transformB Transform
 
 	// Should the proxy radius be considered?
-	use_radii bool
+	useRadii bool
 }
 
 pub type DistanceInput = C.b2DistanceInput
@@ -1173,7 +1173,7 @@ struct C.b2ManifoldPoint {
 
 	// The maximum normal impulse applied during sub-stepping
 	//	todo not sure this is needed
-	max_normalImpulse f32
+	maxNormalImpulse f32
 
 	// Relative normal velocity pre-solve. Used for hit events. If the normal impulse is
 	// zero then there was no hit. Negative means shapes are approaching.
@@ -1205,11 +1205,11 @@ pub type Manifold = C.b2Manifold
 
 pub const (
 	// The default category bit for a tree proxy. Used for collision filtering.
-	default_category_bits = u64(0x00000001)
+	default_category_bits = u32(0x00000001)
 
 	// Convenience mask bits to use when you don't need collision filtering and just want
 	//	all results.
-	default_mask_bits = u64(0xFFFFFFFF)
+	default_mask_bits = u32(0xFFFFFFFF)
 )
 
 // A node in the dynamic tree. This is private data placed here for performance reasons.
@@ -2010,7 +2010,7 @@ pub type Filter = C.b2Filter
 //	you may want a ray-cast representing a projectile to hit players and the static environment
 //	but not debris.
 // @ingroup shape
-@[ypedef] 
+@[typedef] 
 struct C.b2QueryFilter {
 	// The collision category bits of this query. Normally you would just set one bit.
 	categoryBits u32
@@ -2194,7 +2194,7 @@ pub enum JointType {
 	distance_joint
 	motor_joint
 	mouse_joint
-	prismatic_join
+	prismatic_joint
 	revolute_joint
 	weld_joint
 	wheel_joint
@@ -3120,194 +3120,194 @@ pub fn create_world(def &WorldDef) WorldId  {
 	return C.b2CreateWorld(def) 
 }
 
-/// Destroy a world
+// Destroy a world
 fn C.b2DestroyWorld(worldId WorldId)
 @[inline]
 pub fn destroy_world(worldId WorldId) {
 	C.b2DestroyWorld(worldId)
 }
 
-/// World id validation. Provides validation for up to 64K allocations.
+// World id validation. Provides validation for up to 64K allocations.
 
 fn C.b2World_IsValid(id WorldId) bool
 @[inline]
 pub fn world_is_valid(id WorldId) bool {
 	return C.b2World_IsValid(id)
 }
-/// Simulate a world for one time step. This performs collision detection, integration, and constraint solution.
-/// @param worldId The world to simulate
-/// @param timeStep The amount of time to simulate, this should be a fixed number. Typically 1/60.
-/// @param subStepCount The number of sub-steps, increasing the sub-step count can increase accuracy. Typically 4.
+// Simulate a world for one time step. This performs collision detection, integration, and constraint solution.
+// @param worldId The world to simulate
+// @param timeStep The amount of time to simulate, this should be a fixed number. Typically 1/60.
+// @param subStepCount The number of sub-steps, increasing the sub-step count can increase accuracy. Typically 4.
 fn C.b2World_Step(worldId WorldId, timeStep f32, subStepCount int)
 @[inline]
 pub fn world_step(worldId WorldId, timeStep f32, subStepCount int) {
 	C.b2World_Step(worldId, timeStep, subStepCount)
 }
-/// Call this to draw shapes and other debug draw data
+// Call this to draw shapes and other debug draw data
 fn C.b2World_Draw(worldId WorldId, draw &DebugDraw)
 @[inline]
 pub fn world_draw(worldId WorldId, draw &DebugDraw) {
 	C.b2World_Draw(worldId, draw)
 }
-/// Get the body events for the current time step. The event data is transient. Do not store a reference to this data.
+// Get the body events for the current time step. The event data is transient. Do not store a reference to this data.
 fn C.b2World_GetBodyEvents(worldId WorldId) BodyEvents
 @[inline]
 pub fn world_get_body_events(worldId WorldId) BodyEvents {
 	return C.b2World_GetBodyEvents(worldId)
 }
-/// Get 
-/// Get sensor events for the current time step. The event data is transient. Do not store a reference to this data.
+// Get 
+// Get sensor events for the current time step. The event data is transient. Do not store a reference to this data.
 fn C.b2World_GetSensorEvents(worldId WorldId) SensorEvents
 @[inline]
 pub fn world_get_sensor_events(worldId WorldId) SensorEvents {
 	return C.b2World_GetSensorEvents(worldId)
 }
-/// Get contact events for this current time step. The event data is transient. Do not store a reference to this data.
+// Get contact events for this current time step. The event data is transient. Do not store a reference to this data.
 fn C.b2World_GetContactEvents(worldId WorldId) ContactEvents
 @[inline]
 pub fn world_get_contact_events(worldId WorldId) ContactEvents {
 	return C.b2World_GetContactEvents(worldId)
 }
-/// Overlap test for all shapes that *potentially* overlap the provided AABB
+// Overlap test for all shapes that *potentially* overlap the provided AABB
 fn C.b2World_OverlapAABB(worldId WorldId, aabb AABB, filter QueryFilter, fcn &OverlapResultFcn, context voidptr)
 @[inline]
 pub fn world_overlap_aabb(worldId WorldId, aabb AABB, filter QueryFilter, fcn &OverlapResultFcn, context voidptr) {
 	C.b2World_OverlapAABB(worldId, aabb, filter, fcn, context)
 }
-/// Overlap test for for all shapes that overlap the provided circle
+// Overlap test for for all shapes that overlap the provided circle
 fn C.b2World_OverlapCircle(worldId WorldId, circle &Circle, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr)
 @[inline]
 pub fn world_overlap_circle(worldId WorldId, circle &Circle, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr) {
 	C.b2World_OverlapCircle(worldId, circle, transform, filter, fcn, context)
 }
-/// Overlap test for all shapes that overlap the provided capsule
+// Overlap test for all shapes that overlap the provided capsule
 fn C.b2World_OverlapCapsule(worldId WorldId, capsule &Capsule, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr)
 @[inline]
 pub fn world_overlap_capsule(worldId WorldId, capsule &Capsule, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr) {
 	C.b2World_OverlapCapsule(worldId, capsule, transform, filter, fcn, context)
 }
-/// Overlap test for all shapes that overlap the provided polygon
+// Overlap test for all shapes that overlap the provided polygon
 fn C.b2World_OverlapPolygon(worldId WorldId, polygon &Polygon, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr)
 @[inline]
 pub fn world_overlap_polygon(worldId WorldId, polygon &Polygon, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr) {
 	C.b2World_OverlapPolygon(worldId, polygon, transform, filter, fcn, context)
 }
-/// Cast a ray into the world to collect shapes in the path of the ray.
-/// Your callback function controls whether you get the closest point, any point, or n-points.
-/// The ray-cast ignores shapes that contain the starting point.
-///	@param worldId The world to cast the ray against
-///	@param origin The start point of the ray
-///	@param translation The translation of the ray from the start point to the end point
-///	@param filter Contains bit flags to filter unwanted shapes from the results
-/// @param fcn A user implemented callback function
-/// @param context A user context that is passed along to the callback function
-///	@note The callback function may receive shapes in any order
+// Cast a ray into the world to collect shapes in the path of the ray.
+// Your callback function controls whether you get the closest point, any point, or n-points.
+// The ray-cast ignores shapes that contain the starting point.
+//	@param worldId The world to cast the ray against
+//	@param origin The start point of the ray
+//	@param translation The translation of the ray from the start point to the end point
+//	@param filter Contains bit flags to filter unwanted shapes from the results
+// @param fcn A user implemented callback function
+// @param context A user context that is passed along to the callback function
+//	@note The callback function may receive shapes in any order
 fn C.b2World_CastRay(worldId WorldId, origin Vec2, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr)
 @[inline]
 pub fn world_cast_ray(worldId WorldId, origin Vec2, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr) {
 	C.b2World_CastRay(worldId, origin, translation, filter, fcn, context)
 }
-/// Cast a ray into the world to collect the closest hit. This is a convenience function.
-/// This is less general than b2World_CastRay() and does not allow for custom filtering.
+// Cast a ray into the world to collect the closest hit. This is a convenience function.
+// This is less general than b2World_CastRay() and does not allow for custom filtering.
 fn C.b2World_CastRayClosest(worldId WorldId, origin Vec2, translation Vec2, filter QueryFilter) RayResult
 @[inline]
 pub fn world_cast_ray_closest(worldId WorldId, origin Vec2, translation Vec2, filter QueryFilter) RayResult {
 	return C.b2World_CastRayClosest(worldId, origin, translation, filter)
 }
-/// Cast a circle through the world. Similar to a cast ray except that a circle is cast instead of a point.
+// Cast a circle through the world. Similar to a cast ray except that a circle is cast instead of a point.
 fn C.b2World_CastCircle(worldId WorldId, circle &Circle, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr)
 @[inline]
 pub fn world_cast_circle(worldId WorldId, circle &Circle, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr) {
 	C.b2World_CastCircle(worldId, circle, originTransform, translation, filter, fcn, context)
 }
-/// Cast a capsule through the world. Similar to a cast ray except that a capsule is cast instead of a point.
+// Cast a capsule through the world. Similar to a cast ray except that a capsule is cast instead of a point.
 fn C.b2World_CastCapsule(worldId WorldId, capsule &Capsule, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr)
 @[inline]
 pub fn world_cast_capsule(worldId WorldId, capsule &Capsule, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr) {
 	C.b2World_CastCapsule(worldId, capsule, originTransform, translation, filter, fcn, context)
 }
-/// Cast a polygon through the world. Similar to a cast ray except that a polygon is cast instead of a point.
+// Cast a polygon through the world. Similar to a cast ray except that a polygon is cast instead of a point.
 fn C.b2World_CastPolygon(worldId WorldId, polygon &Polygon, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr)
 @[inline]
 pub fn world_cast_polygon(worldId WorldId, polygon &Polygon, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr) {
 	C.b2World_CastPolygon(worldId, polygon, originTransform, translation, filter, fcn, context)
 }
-/// Enable/disable sleep. If your application does not need sleeping, you can gain some performance
-///	by disabling sleep completely at the world level.
-///	@see b2WorldDef
+// Enable/disable sleep. If your application does not need sleeping, you can gain some performance
+//	by disabling sleep completely at the world level.
+//	@see b2WorldDef
 fn C.b2World_EnableSleeping(worldId WorldId, flag bool)
 @[inline]
 pub fn world_enable_sleeping(worldId WorldId, flag bool) {
 	C.b2World_EnableSleeping(worldId, flag)
 }
-/// Enable/disable continuous collision between dynamic and static bodies. Generally you should keep continuous
-/// collision enabled to prevent fast moving objects from going through static objects. The performance gain from
-///	disabling continuous collision is minor.
-///	@see b2WorldDef
+// Enable/disable continuous collision between dynamic and static bodies. Generally you should keep continuous
+// collision enabled to prevent fast moving objects from going through static objects. The performance gain from
+//	disabling continuous collision is minor.
+//	@see b2WorldDef
 fn C.b2World_EnableContinuous(worldId WorldId, flag bool)
 @[inline]
 pub fn world_enable_continuous(worldId WorldId, flag bool) {
 	C.b2World_EnableContinuous(worldId, flag)
 }
-/// Adjust the restitution threshold. It is recommended not to make this value very small
-///	because it will prevent bodies from sleeping. Typically in meters per second.
-///	@see b2WorldDef
+// Adjust the restitution threshold. It is recommended not to make this value very small
+//	because it will prevent bodies from sleeping. Typically in meters per second.
+//	@see b2WorldDef
 fn C.b2World_SetRestitutionThreshold(worldId WorldId, value f32)
 @[inline]
 pub fn world_set_restitution_threshold(worldId WorldId, value f32) {
 	C.b2World_SetRestitutionThreshold(worldId, value)
 }
-/// Adjust the hit event threshold. This controls the collision velocity needed to generate a b2ContactHitEvent.
-/// Typically in meters per second.
-///	@see b2WorldDef::hitEventThreshold
+// Adjust the hit event threshold. This controls the collision velocity needed to generate a b2ContactHitEvent.
+// Typically in meters per second.
+//	@see b2WorldDef::hitEventThreshold
 fn C.b2World_SetHitEventThreshold(worldId WorldId, value f32)
 @[inline]
 pub fn world_set_hit_event_threshold(worldId WorldId, value f32) {
 	C.b2World_SetHitEventThreshold(worldId, value)
 }
-/// Register the custom filter callback. This is optional.
+// Register the custom filter callback. This is optional.
 fn C.b2World_SetCustomFilterCallback(worldId WorldId, fcn &CustomFilterFcn, context voidptr)
 @[inline]
 pub fn world_set_custom_filter_callback(worldId WorldId, fcn &CustomFilterFcn, context voidptr) {
 	C.b2World_SetCustomFilterCallback(worldId, fcn, context)
 }
-/// Register the pre-solve callback. This is optional.b2World_SetPreSolveCallback(worldId WorldId, fcn &PreSolveFcn, context voidptr)
+// Register the pre-solve callback. This is optional.b2World_SetPreSolveCallback(worldId WorldId, fcn &PreSolveFcn, context voidptr)
 fn C.b2World_SetPreSolveCallback(worldId WorldId, fcn &PreSolveFcn, context voidptr)
 @[inline]
 pub fn world_set_pre_solve_callback(worldId WorldId, fcn &PreSolveFcn, context voidptr) {
 	C.b2World_SetPreSolveCallback(worldId, fcn, context)
 }
-/// Set the gravity vector for the entire world. Box2D has no concept of an up direction and this
-/// is left as a decision for the application. Typically in m/s^2.
-///	@see b2WorldDef
+// Set the gravity vector for the entire world. Box2D has no concept of an up direction and this
+// is left as a decision for the application. Typically in m/s^2.
+//	@see b2WorldDef
 fn C.b2World_SetGravity(worldId WorldId, gravity Vec2)
 @[inline]
 pub fn world_set_gravity(worldId WorldId, gravity Vec2) {
 	C.b2World_SetGravity(worldId, gravity)
 }
-/// Get the gravity vector
+// Get the gravity vector
 fn C.b2World_GetGravity(worldId WorldId) Vec2
 @[inline]
 pub fn world_get_gravity(worldId WorldId) Vec2 {
 	return C.b2World_GetGravity(worldId)
 }
-/// Apply a radial explosion
-///	@param worldId The world id
-///	@param position The center of the explosion
-///	@param radius The radius of the explosion
-///	@param impulse The impulse of the explosion, typically in kg * m / s or N * s.
+// Apply a radial explosion
+//	@param worldId The world id
+//	@param position The center of the explosion
+//	@param radius The radius of the explosion
+//	@param impulse The impulse of the explosion, typically in kg * m / s or N * s.
 fn C.b2World_Explode(worldId WorldId, position Vec2, radius f32, impulse f32)
 @[inline]
 pub fn world_explode(worldId WorldId, position Vec2, radius f32, impulse f32) {
 	C.b2World_Explode(worldId, position, radius, impulse)
 }
 
-/// Adjust contact tuning parameters
-///	@param worldId The world id
-/// @param hertz The contact stiffness (cycles per second)
-/// @param dampingRatio The contact bounciness with 1 being critical damping (non-dimensional)
-/// @param pushVelocity The maximum contact constraint push out velocity (meters per second)
-///	@note Advanced feature
+// Adjust contact tuning parameters
+//	@param worldId The world id
+// @param hertz The contact stiffness (cycles per second)
+// @param dampingRatio The contact bounciness with 1 being critical damping (non-dimensional)
+// @param pushVelocity The maximum contact constraint push out velocity (meters per second)
+//	@note Advanced feature
 
 fn C.b2World_SetContactTuning(worldId WorldId, hertz f32, dampingRatio f32, pushVelocity f32)
 @[inline]
@@ -3315,29 +3315,29 @@ pub fn world_set_contact_tuning(worldId WorldId, hertz f32, dampingRatio f32, pu
 	C.b2World_SetContactTuning(worldId, hertz, dampingRatio, pushVelocity)
 }
 
-/// Enable/disable constraint warm starting. Advanced feature for testing. Disabling
-///	sleeping greatly reduces stability and provides no performance gain.
+// Enable/disable constraint warm starting. Advanced feature for testing. Disabling
+//	sleeping greatly reduces stability and provides no performance gain.
 fn C.b2World_EnableWarmStarting(worldId WorldId, flag bool)
 @[inline]
 pub fn world_enable_warm_starting(worldId WorldId, flag bool) {
 	C.b2World_EnableWarmStarting(worldId, flag)
 }
 
-/// Get the current world performance profile 
+// Get the current world performance profile 
 fn C.b2World_GetProfile(worldId WorldId) Profile
 @[inline]
 pub fn world_get_profile(worldId WorldId) Profile {
 	return C.b2World_GetProfile(worldId)
 }
 
-/// Get world counters and sizes
+// Get world counters and sizes
 fn C.b2World_GetCounters(worldId WorldId) Counters
 @[inline]
 pub fn world_get_counters(worldId WorldId) Counters {
 	return C.b2World_GetCounters(worldId)
 }
 
-/// Dump memory stats to box2d_memory.txt
+// Dump memory stats to box2d_memory.txt
 fn C.b2World_DumpMemoryStats(worldId WorldId)
 @[inline]
 pub fn world_dump_memory_stats(worldId WorldId) {
@@ -3352,486 +3352,486 @@ pub fn world_dump_memory_stats(worldId WorldId) {
  * @{
  */
 
-/// Create a rigid body given a definition. No reference to the definition is retained. So you can create the definition
-///	on the stack and pass it as a pointer.
-///	@code{.c}
-///	b2BodyDef bodyDef = b2DefaultBodyDef();
-///	b2BodyId myBodyId = b2CreateBody(myWorldId, &bodyDef);
-///	@endcode
-/// @warning This function is locked during callbacks.
+// Create a rigid body given a definition. No reference to the definition is retained. So you can create the definition
+//	on the stack and pass it as a pointer.
+//	@code{.c}
+//	b2BodyDef bodyDef = b2DefaultBodyDef();
+//	b2BodyId myBodyId = b2CreateBody(myWorldId, &bodyDef);
+//	@endcode
+// @warning This function is locked during callbacks.
 fn C.b2CreateBody(worldId WorldId, def &BodyDef) BodyId
 @[inline]
 pub fn create_body(worldId WorldId, def &BodyDef) BodyId {
 	return C.b2CreateBody(worldId, def) 
 }
 
-/// Destroy a rigid body given an id. This destroys all shapes and joints attached to the body.
-///	Do not keep references to the associated shapes and joints.
+// Destroy a rigid body given an id. This destroys all shapes and joints attached to the body.
+//	Do not keep references to the associated shapes and joints.
 fn C.b2DestroyBody(bodyId BodyId)
 @[inline]
 pub fn destroy_body(bodyId BodyId) {
 	C.b2DestroyBody(bodyId)
 }
 
-/// Body identifier validation. Can be used to detect orphaned ids. Provides validation for up to 64K allocations.
+// Body identifier validation. Can be used to detect orphaned ids. Provides validation for up to 64K allocations.
 fn C.b2Body_IsValid(id BodyId) bool
 @[inline]
 pub fn body_is_valid(id BodyId) bool {
 	return C.b2Body_IsValid(id)
 }
 
-/// Get the body type: static, kinematic, or dynamic
+// Get the body type: static, kinematic, or dynamic
 fn C.b2Body_GetType(bodyId BodyId) BodyType
 @[inline]
 pub fn body_get_type(bodyId BodyId) BodyType {
 	return C.b2Body_GetType(bodyId)
 }
 
-/// Change the body type. This is an expensive operation. This automatically updates the mass
-///	properties regardless of the automatic mass setting.
+// Change the body type. This is an expensive operation. This automatically updates the mass
+//	properties regardless of the automatic mass setting.
 fn C.b2Body_SetType(bodyId BodyId, types BodyType)
 @[inline]
 pub fn body_set_type(bodyId BodyId, types BodyType){
 	C.b2Body_SetType(bodyId, types)
 }
 
-/// Set the user data for a body
+// Set the user data for a body
 fn C.b2Body_SetUserData(bodyId BodyId, userData voidptr)
 @[inline]
 pub fn body_set_user_data(bodyId BodyId, userData voidptr) {
 	C.b2Body_SetUserData(bodyId, userData)
 }
 
-/// Get the user data stored in a body
+// Get the user data stored in a body
 fn C.b2Body_GetUserData(bodyId BodyId) voidptr
 @[inline]
 pub fn body_get_user_data(bodyId BodyId) voidptr {
 	return C.b2Body_GetUserData(bodyId)
 }
 
-/// Get the world position of a body. This is the location of the body origin.
+// Get the world position of a body. This is the location of the body origin.
 fn C.b2Body_GetPosition(bodyId BodyId) Vec2
 @[inline]
 pub fn body_get_position(bodyId BodyId) Vec2 {
 	return C.b2Body_GetPosition(bodyId) 
 }
 
-/// Get the world rotation of a body as a cosine/sine pair (complex number)
+// Get the world rotation of a body as a cosine/sine pair (complex number)
 fn C.b2Body_GetRotation(bodyId BodyId) Rot
 @[inline]
 pub fn body_get_rotation(bodyId BodyId) Rot {
 	return C.b2Body_GetRotation(bodyId)
 }
 
-/// Get the world transform of a body.
+// Get the world transform of a body.
 fn C.b2Body_GetTransform(bodyId BodyId) Transform
 @[inline]
 pub fn body_get_transform(bodyId BodyId) Transform {
 	return C.b2Body_GetTransform(bodyId)
 }
 
-/// Set the world transform of a body. This acts as a teleport and is fairly expensive.
-/// @note Generally you should create a body with then intended transform.
-///	@see BodyDef::position and BodyDef::angle
+// Set the world transform of a body. This acts as a teleport and is fairly expensive.
+// @note Generally you should create a body with then intended transform.
+//	@see BodyDef::position and BodyDef::angle
 fn C.b2Body_SetTransform(bodyId BodyId, position Vec2, rotation Rot)
 @[inline]
 pub fn body_set_transform(bodyId BodyId, position Vec2, rotation Rot) {
 	C.b2Body_SetTransform(bodyId, position, rotation)
 }
 
-/// Get a local point on a body given a world point
+// Get a local point on a body given a world point
 fn C.b2Body_GetLocalPoint(bodyId BodyId, worldPoint Vec2) Vec2
 @[inline]
 pub fn body_get_local_point(bodyId BodyId, worldPoint Vec2) Vec2 {
 	return C.b2Body_GetLocalPoint(bodyId, worldPoint)
 }
 
-/// Get a world point on a body given a local point
+// Get a world point on a body given a local point
 fn C.b2Body_GetWorldPoint(bodyId BodyId, localPoint Vec2) Vec2
 @[inline]
 pub fn body_get_world_point(bodyId BodyId, localPoint Vec2) Vec2 {
 	return C.b2Body_GetWorldPoint(bodyId, localPoint)
 }
 
-/// Get a local vector on a body given a world vector
+// Get a local vector on a body given a world vector
 fn C.b2Body_GetLocalVector(bodyId BodyId, worldVector Vec2) Vec2
 @[inline]
 pub fn body_get_local_vector(bodyId BodyId, worldVector Vec2) Vec2 {
 	return C.b2Body_GetLocalVector(bodyId, worldVector)
 }
 
-/// Get a world vector on a body given a local vector
+// Get a world vector on a body given a local vector
 fn C.b2Body_GetWorldVector(bodyId BodyId, localVector Vec2) Vec2
 @[inline]
 pub fn body_get_world_vector(bodyId BodyId, localVector Vec2) Vec2 {
 	return C.b2Body_GetWorldVector(bodyId, localVector)
 }
 
-/// Get the linear velocity of a body's center of mass. Typically in meters per second.
+// Get the linear velocity of a body's center of mass. Typically in meters per second.
 fn C.b2Body_GetLinearVelocity(bodyId BodyId) Vec2
 @[inline]
 pub fn body_get_linear_velocity(bodyId BodyId) Vec2 {
 	return C.b2Body_GetLinearVelocity(bodyId)
 }
 
-/// Get the angular velocity of a body in radians per second
+// Get the angular velocity of a body in radians per second
 fn C.b2Body_GetAngularVelocity(bodyId BodyId) f32
 @[inline]
 pub fn body_get_angular_velocity(bodyId BodyId) f32 {
 	return C.b2Body_GetAngularVelocity(bodyId)
 }
 
-/// Set the linear velocity of a body. Typically in meters per second.
+// Set the linear velocity of a body. Typically in meters per second.
 fn C.b2Body_SetLinearVelocity(bodyId BodyId, linearVelocity Vec2)
 @[inline]
 pub fn body_set_linear_velocity(bodyId BodyId, linearVelocity Vec2) {
 	C.b2Body_SetLinearVelocity(bodyId, linearVelocity)
 }
 
-/// Set the angular velocity of a body in radians per second
+// Set the angular velocity of a body in radians per second
 fn C.b2Body_SetAngularVelocity(bodyId BodyId, angularVelocity f32)
 @[inline]
 pub fn body_set_angular_velocity(bodyId BodyId, angularVelocity f32) {
 	C.b2Body_SetAngularVelocity(bodyId, angularVelocity)
 }
 
-/// Apply a force at a world point. If the force is not applied at the center of mass,
-/// it will generate a torque and affect the angular velocity. This optionally wakes up the body.
-///	The force is ignored if the body is not awake.
-///	@param bodyId The body id
-/// @param force The world force vector, typically in newtons (N)
-/// @param point The world position of the point of application
-/// @param wake Option to wake up the body
+// Apply a force at a world point. If the force is not applied at the center of mass,
+// it will generate a torque and affect the angular velocity. This optionally wakes up the body.
+//	The force is ignored if the body is not awake.
+//	@param bodyId The body id
+// @param force The world force vector, typically in newtons (N)
+// @param point The world position of the point of application
+// @param wake Option to wake up the body
 fn C.b2Body_ApplyForce(bodyId BodyId, force Vec2, point Vec2, wake bool)
 @[inline]
 pub fn body_apply_force(bodyId BodyId, force Vec2, point Vec2, wake bool) {
 	C.b2Body_ApplyForce(bodyId, force, point, wake)
 }
 
-/// Apply a force to the center of mass. This optionally wakes up the body.
-///	The force is ignored if the body is not awake.
-///	@param bodyId The body id
-/// @param force the world force vector, usually in newtons (N).
-/// @param wake also wake up the body
+// Apply a force to the center of mass. This optionally wakes up the body.
+//	The force is ignored if the body is not awake.
+//	@param bodyId The body id
+// @param force the world force vector, usually in newtons (N).
+// @param wake also wake up the body
 fn C.b2Body_ApplyForceToCenter(bodyId BodyId, force Vec2, wake bool)
 @[inline]
 pub fn body_apply_force_to_center(bodyId BodyId, force Vec2, wake bool) {
 	C.b2Body_ApplyForceToCenter(bodyId, force, wake)
 }
 
-/// Apply a torque. This affects the angular velocity without affecting the linear velocity.
-///	This optionally wakes the body. The torque is ignored if the body is not awake.
-///	@param bodyId The body id
-/// @param torque about the z-axis (out of the screen), typically in N*m.
-/// @param wake also wake up the body
+// Apply a torque. This affects the angular velocity without affecting the linear velocity.
+//	This optionally wakes the body. The torque is ignored if the body is not awake.
+//	@param bodyId The body id
+// @param torque about the z-axis (out of the screen), typically in N*m.
+// @param wake also wake up the body
 fn C.b2Body_ApplyTorque(bodyId BodyId, torque f32, wake bool)
 @[inline]
 pub fn body_apply_torque(bodyId BodyId, torque f32, wake bool) {
 	C.b2Body_ApplyTorque(bodyId, torque, wake)
 }
 
-/// Apply an impulse at a point. This immediately modifies the velocity.
-/// It also modifies the angular velocity if the point of application
-/// is not at the center of mass. This optionally wakes the body.
-/// The impulse is ignored if the body is not awake.
-///	@param bodyId The body id
-/// @param impulse the world impulse vector, typically in N*s or kg*m/s.
-/// @param point the world position of the point of application.
-/// @param wake also wake up the body
-///	@warning This should be used for one-shot impulses. If you need a steady force,
-/// use a force instead, which will work better with the sub-stepping solver.
+// Apply an impulse at a point. This immediately modifies the velocity.
+// It also modifies the angular velocity if the point of application
+// is not at the center of mass. This optionally wakes the body.
+// The impulse is ignored if the body is not awake.
+//	@param bodyId The body id
+// @param impulse the world impulse vector, typically in N*s or kg*m/s.
+// @param point the world position of the point of application.
+// @param wake also wake up the body
+//	@warning This should be used for one-shot impulses. If you need a steady force,
+// use a force instead, which will work better with the sub-stepping solver.
 fn C.b2Body_ApplyLinearImpulse(bodyId BodyId, impulse Vec2, point Vec2, wake bool)
 @[inline]
 pub fn body_apply_linear_impulse(bodyId BodyId, impulse Vec2, point Vec2, wake bool) {
 	C.b2Body_ApplyLinearImpulse(bodyId, impulse, point, wake)
 }
 
-/// Apply an impulse to the center of mass. This immediately modifies the velocity.
-/// The impulse is ignored if the body is not awake. This optionally wakes the body.
-///	@param bodyId The body id
-/// @param impulse the world impulse vector, typically in N*s or kg*m/s.
-/// @param wake also wake up the body
-///	@warning This should be used for one-shot impulses. If you need a steady force,
-/// use a force instead, which will work better with the sub-stepping solver.
+// Apply an impulse to the center of mass. This immediately modifies the velocity.
+// The impulse is ignored if the body is not awake. This optionally wakes the body.
+//	@param bodyId The body id
+// @param impulse the world impulse vector, typically in N*s or kg*m/s.
+// @param wake also wake up the body
+//	@warning This should be used for one-shot impulses. If you need a steady force,
+// use a force instead, which will work better with the sub-stepping solver.
 fn C.b2Body_ApplyLinearImpulseToCenter(bodyId BodyId, impulse Vec2, wake bool)
 @[inline]
 pub fn body_apply_linear_impulse_to_center(bodyId BodyId, impulse Vec2, wake bool) {
 	C.b2Body_ApplyLinearImpulseToCenter(bodyId, impulse, wake)
 }
 
-/// Apply an angular impulse. The impulse is ignored if the body is not awake.
-/// This optionally wakes the body.
-///	@param bodyId The body id
-/// @param impulse the angular impulse, typically in units of kg*m*m/s
-/// @param wake also wake up the body
-///	@warning This should be used for one-shot impulses. If you need a steady force,
-/// use a force instead, which will work better with the sub-stepping solver.
+// Apply an angular impulse. The impulse is ignored if the body is not awake.
+// This optionally wakes the body.
+//	@param bodyId The body id
+// @param impulse the angular impulse, typically in units of kg*m*m/s
+// @param wake also wake up the body
+//	@warning This should be used for one-shot impulses. If you need a steady force,
+// use a force instead, which will work better with the sub-stepping solver.
 fn C.b2Body_ApplyAngularImpulse(bodyId BodyId, impulse f32, wake bool)
 @[inline]
 pub fn body_apply_angular_impulse(bodyId BodyId, impulse f32, wake bool) {
 	C.b2Body_ApplyAngularImpulse(bodyId, impulse, wake)
 }
 
-/// Get the mass of the body, typically in kilograms
+// Get the mass of the body, typically in kilograms
 fn C.b2Body_GetMass(bodyId BodyId) f32
 @[inline]
 pub fn body_get_mass(bodyId BodyId) f32 {
 	return C.b2Body_GetMass(bodyId)
 }
 
-/// Get the inertia tensor of the body, typically in kg*m^2
+// Get the inertia tensor of the body, typically in kg*m^2
 fn C.b2Body_GetInertiaTensor(bodyId BodyId) f32
 @[inline]
 pub fn body_get_inertia_tensor(bodyId BodyId) f32 {
 	return C.b2Body_GetInertiaTensor(bodyId)
 }
 
-/// Get the center of mass position of the body in local space
+// Get the center of mass position of the body in local space
 fn C.b2Body_GetLocalCenterOfMass(bodyId BodyId) Vec2
 @[inline]
 pub fn body_get_local_center_of_mass(bodyId BodyId) Vec2 {
 	return C.b2Body_GetLocalCenterOfMass(bodyId)
 }
 
-/// Get the center of mass position of the body in world space
+// Get the center of mass position of the body in world space
 fn C.b2Body_GetWorldCenterOfMass(bodyId BodyId) Vec2
 @[inline]
 pub fn body_get_world_center_of_mass(bodyId BodyId) Vec2 {
 	return C.b2Body_GetWorldCenterOfMass(bodyId)
 }
 
-/// Override the body's mass properties. Normally this is computed automatically using the
-///	shape geometry and density. This information is lost if a shape is added or removed or if the
-///	body type changes.
+// Override the body's mass properties. Normally this is computed automatically using the
+//	shape geometry and density. This information is lost if a shape is added or removed or if the
+//	body type changes.
 fn C.b2Body_SetMassData(bodyId BodyId, massData MassData)
 @[inline]
 pub fn body_set_mass_data(bodyId BodyId, massData MassData) {
 	C.b2Body_SetMassData(bodyId, massData)
 }
 
-/// Get the mass data for a body
+// Get the mass data for a body
 fn C.b2Body_GetMassData(bodyId BodyId) MassData
 @[inline]
 pub fn body_get_mass_data(bodyId BodyId) MassData {
 	return C.b2Body_GetMassData(bodyId)
 }
 
-/// This update the mass properties to the sum of the mass properties of the shapes.
-/// This normally does not need to be called unless you called SetMassData to override
-/// the mass and you later want to reset the mass.
-///	You may also use this when automatic mass computation has been disabled.
-///	You should call this regardless of body type.
+// This update the mass properties to the sum of the mass properties of the shapes.
+// This normally does not need to be called unless you called SetMassData to override
+// the mass and you later want to reset the mass.
+//	You may also use this when automatic mass computation has been disabled.
+//	You should call this regardless of body type.
 fn C.b2Body_ApplyMassFromShapes(bodyId BodyId)
 @[inline]
 pub fn body_apply_mass_from_shapes(bodyId BodyId) {
 	C.b2Body_ApplyMassFromShapes(bodyId)
 }
 
-/// Set the automatic mass setting. Normally this is set in BodyDef before creation.
-///	@see BodyDef::automaticMass
+// Set the automatic mass setting. Normally this is set in BodyDef before creation.
+//	@see BodyDef::automaticMass
 fn C.b2Body_SetAutomaticMass(bodyId BodyId, automaticMass bool)
 @[inline]
 pub fn body_set_automatic_mass(bodyId BodyId, automaticMass bool) {
 	C.b2Body_SetAutomaticMass(bodyId, automaticMass)
 }
 
-/// Get the automatic mass setting 
+// Get the automatic mass setting 
 fn C.b2Body_GetAutomaticMass(bodyId BodyId) bool
 @[inline]
 pub fn body_get_automatic_mass(bodyId BodyId) bool {
 	return C.b2Body_GetAutomaticMass(bodyId)
 }
 
-/// Adjust the linear damping. Normally this is set in BodyDef before creation.
+// Adjust the linear damping. Normally this is set in BodyDef before creation.
 fn C.b2Body_SetLinearDamping(bodyId BodyId, linearDamping f32)
 @[inline]
 pub fn body_set_linear_damping(bodyId BodyId, linearDamping f32) {
 	C.b2Body_SetLinearDamping(bodyId, linearDamping)
 }
 
-/// Get the current linear damping.
+// Get the current linear damping.
 fn C.b2Body_GetLinearDamping(bodyId BodyId) f32
 @[inline]
 pub fn body_get_linear_damping(bodyId BodyId) f32 {
 	return C.b2Body_GetLinearDamping(bodyId)
 }
 
-/// Adjust the angular damping. Normally this is set in BodyDef before creation.
+// Adjust the angular damping. Normally this is set in BodyDef before creation.
 fn C.b2Body_SetAngularDamping(bodyId BodyId, angularDamping f32)
 @[inline]
 pub fn body_set_angular_damping(bodyId BodyId, angularDamping f32) {
 	C.b2Body_SetAngularDamping(bodyId, angularDamping)
 }
 
-/// Get the current angular damping.
+// Get the current angular damping.
 fn C.b2Body_GetAngularDamping(bodyId BodyId) f32
 @[inline]
 pub fn body_get_angular_damping(bodyId BodyId) f32  {
 	return C.b2Body_GetAngularDamping(bodyId)
 }
 
-/// Adjust the gravity scale. Normally this is set in BodyDef before creation.
-///	@see BodyDef::gravityScale
+// Adjust the gravity scale. Normally this is set in BodyDef before creation.
+//	@see BodyDef::gravityScale
 fn C.b2Body_SetGravityScale(bodyId BodyId, gravityScale f32)
 @[inline]
 pub fn body_set_gravity_scale(bodyId BodyId, gravityScale f32) {
 	C.b2Body_SetGravityScale(bodyId, gravityScale)
 }
 
-/// Get the current gravity scale
+// Get the current gravity scale
 fn C.b2Body_GetGravityScale(bodyId BodyId) f32
 @[inline]
 pub fn body_get_gravity_scale(bodyId BodyId) f32 {
 	return C.b2Body_GetGravityScale(bodyId)
 }
-/// @return true if this body is awake
+// @return true if this body is awake
 fn C.b2Body_IsAwake(bodyId BodyId) bool
 @[inline]
 pub fn body_is_awake(bodyId BodyId) bool {
 	return C.b2Body_IsAwake(bodyId)
 }
 
-/// Wake a body from sleep. This wakes the entire island the body is touching.
-///	@warning Putting a body to sleep will put the entire island of bodies touching this body to sleep,
-///	which can be expensive and possibly unintuitive.
+// Wake a body from sleep. This wakes the entire island the body is touching.
+//	@warning Putting a body to sleep will put the entire island of bodies touching this body to sleep,
+//	which can be expensive and possibly unintuitive.
 fn C.b2Body_SetAwake(bodyId BodyId, awake bool)
 @[inline]
 pub fn body_set_awake(bodyId BodyId, awake bool) {
 	C.b2Body_SetAwake(bodyId, awake)
 }
 
-/// Enable or disable sleeping for this body. If sleeping is disabled the body will wake.
+// Enable or disable sleeping for this body. If sleeping is disabled the body will wake.
 fn C.b2Body_EnableSleep(bodyId BodyId, enableSleep bool)
 @[inline]
 pub fn body_enable_sleep(bodyId BodyId, enableSleep bool) {
 	C.b2Body_EnableSleep(bodyId, enableSleep)
 }
 
-/// Returns true if sleeping is enabled for this body
+// Returns true if sleeping is enabled for this body
 fn C.b2Body_IsSleepEnabled(bodyId BodyId) bool
 @[inline]
 pub fn body_is_sleep_enabled(bodyId BodyId) bool {
 	return C.b2Body_IsSleepEnabled(bodyId)
 }
 
-/// Set the sleep threshold, typically in meters per second
+// Set the sleep threshold, typically in meters per second
 fn C.b2Body_SetSleepThreshold(bodyId BodyId, sleepVelocity f32)
 @[inline]
 pub fn body_set_sleep_threshold(bodyId BodyId, sleepVelocity f32) {
 	C.b2Body_SetSleepThreshold(bodyId, sleepVelocity)
 }
 
-/// Get the sleep threshold, typically in meters per second.
+// Get the sleep threshold, typically in meters per second.
 fn C.b2Body_GetSleepThreshold(bodyId BodyId) f32
 @[inline]
 pub fn body_get_sleep_threshold(bodyId BodyId) f32 {
 	return C.b2Body_GetSleepThreshold(bodyId)
 }
 
-/// Returns true if this body is enabled
+// Returns true if this body is enabled
 fn C.b2Body_IsEnabled(bodyId BodyId) bool
 @[inline]
 pub fn body_is_enabled(bodyId BodyId) bool {
 	return C.b2Body_IsEnabled(bodyId)
 }
 
-/// Disable a body by removing it completely from the simulation. This is expensive.
+// Disable a body by removing it completely from the simulation. This is expensive.
 fn C.b2Body_Disable(bodyId BodyId)
 @[inline]
 pub fn body_disable(bodyId BodyId) {
 	C.b2Body_Disable(bodyId)
 }
 
-/// Enable a body by adding it to the simulation. This is expensive.
+// Enable a body by adding it to the simulation. This is expensive.
 fn C.b2Body_Enable(bodyId BodyId)
 @[inline]
 pub fn body_enable(bodyId BodyId) {
 	C.b2Body_Enable(bodyId)
 }
 
-/// Set this body to have fixed rotation. This causes the mass to be reset in all cases.
+// Set this body to have fixed rotation. This causes the mass to be reset in all cases.
 fn C.b2Body_SetFixedRotation(bodyId BodyId, flag bool)  
 @[inline]
 pub fn body_set_fixed_rotation(bodyId BodyId, flag bool)   {
 	C.b2Body_SetFixedRotation(bodyId, flag)  
 }
 
-/// Does this body have fixed rotation? 
+// Does this body have fixed rotation? 
 fn C.b2Body_IsFixedRotation(bodyId BodyId) bool
 @[inline]
 pub fn body_is_fixed_rotation(bodyId BodyId) bool {
 	return C.b2Body_IsFixedRotation(bodyId)
 }
 
-/// Set this body to be a bullet. A bullet does continuous collision detection
-/// against dynamic bodies (but not other bullets).
+// Set this body to be a bullet. A bullet does continuous collision detection
+// against dynamic bodies (but not other bullets).
 fn C.b2Body_SetBullet(bodyId BodyId, flag bool)
 @[inline]
 pub fn body_set_bullet(bodyId BodyId, flag bool) {
 	C.b2Body_SetBullet(bodyId, flag)
 }
 
-/// Is this body a bullet?
+// Is this body a bullet?
 fn C.b2Body_IsBullet(bodyId BodyId) bool
 @[inline]
 pub fn body_is_bullet(bodyId BodyId) bool {
 	return C.b2Body_IsBullet(bodyId) 
 }
 
-/// Enable/disable hit events on all shapes
-///	@see b2ShapeDef::enableHitEvents
+// Enable/disable hit events on all shapes
+//	@see b2ShapeDef::enableHitEvents
 fn C.b2Body_EnableHitEvents(bodyId BodyId, enableHitEvents bool)
 @[inline]
 pub fn body_enable_hit_events(bodyId BodyId, enableHitEvents bool) {
 	C.b2Body_EnableHitEvents(bodyId, enableHitEvents)
 }
 
-/// Get the number of shapes on this body
+// Get the number of shapes on this body
 fn C.b2Body_GetShapeCount(bodyId BodyId) int
 @[inline]
 pub fn body_get_shape_count(bodyId BodyId) int {
 	return C.b2Body_GetShapeCount(bodyId)
 }
 
-/// Get the shape ids for all shapes on this body, up to the provided capacity.
-///	@returns the number of shape ids stored in the user array
+// Get the shape ids for all shapes on this body, up to the provided capacity.
+//	@returns the number of shape ids stored in the user array
 fn C.b2Body_GetShapes(bodyId BodyId, shapeArray &ShapeId, capacity int) int
 @[inline]
 pub fn body_get_shapes(bodyId BodyId, shapeArray &ShapeId, capacity int) int {
 	return C.b2Body_GetShapes(bodyId, shapeArray, capacity)
 }
 
-/// Get the number of joints on this body
+// Get the number of joints on this body
 fn C.b2Body_GetJointCount(bodyId BodyId) int
 @[inline]
 pub fn body_get_joint_count(bodyId BodyId) int {
 	return C.b2Body_GetJointCount(bodyId)
 }
 
-/// Get the joint ids for all joints on this body, up to the provided capacity
-///	@returns the number of joint ids stored in the user array
+// Get the joint ids for all joints on this body, up to the provided capacity
+//	@returns the number of joint ids stored in the user array
 fn C.b2Body_GetJoints(bodyId BodyId, jointArray &JointId, capacity int) int
 @[inline]
 pub fn body_get_joints(bodyId BodyId, jointArray &JointId, capacity int) int {
 	return C.b2Body_GetJoints(bodyId, jointArray, capacity)
 }
 
-/// Get the maximum capacity required for retrieving all the touching contacts on a body
+// Get the maximum capacity required for retrieving all the touching contacts on a body
 fn C.b2Body_GetContactCapacity(bodyId BodyId) int
 @[inline]
 pub fn body_get_contact_capacity(bodyId BodyId) int {
 	return C.b2Body_GetContactCapacity(bodyId)
 }
 
-/// Get the touching contact data for a body
+// Get the touching contact data for a body
 fn C.b2Body_GetContactData(bodyId BodyId, contactData &ContactData, capacity int) int
 @[inline]
 pub fn body_get_contact_data(bodyId BodyId, contactData &ContactData, capacity int) int {
 	return C.b2Body_GetContactData(bodyId, contactData, capacity)
 }
 
-/// Get the current world AABB that contains all the attached shapes. Note that this may not encompass the body origin.
-///	If there are no shapes attached then the returned AABB is empty and centered on the body origin.
+// Get the current world AABB that contains all the attached shapes. Note that this may not encompass the body origin.
+//	If there are no shapes attached then the returned AABB is empty and centered on the body origin.
 fn C.b2Body_ComputeAABB(bodyId BodyId) AABB 
 @[inline]
 pub fn body_compute_aabb(bodyId BodyId) AABB  {
@@ -3847,368 +3847,368 @@ pub fn body_compute_aabb(bodyId BodyId) AABB  {
  * @{
  */
 
-/// Create a circle shape and attach it to a body. The shape definition and geometry are fully cloned.
-/// Contacts are not created until the next time step.
-///	@return the shape id for accessing the shape
+// Create a circle shape and attach it to a body. The shape definition and geometry are fully cloned.
+// Contacts are not created until the next time step.
+//	@return the shape id for accessing the shape
 fn C.b2CreateCircleShape(bodyId BodyId, def &ShapeDef, circle &Circle) ShapeId 
 @[inline]
 pub fn create_circle_shape(bodyId BodyId, def &ShapeDef, circle &Circle) ShapeId  {
 	return C.b2CreateCircleShape(bodyId, def, circle) 
 }
 
-/// Create a line segment shape and attach it to a body. The shape definition and geometry are fully cloned.
-/// Contacts are not created until the next time step.
-///	@return the shape id for accessing the shape
+// Create a line segment shape and attach it to a body. The shape definition and geometry are fully cloned.
+// Contacts are not created until the next time step.
+//	@return the shape id for accessing the shape
 fn C.b2CreateSegmentShape(bodyId BodyId, def &ShapeDef, segment &Segment) ShapeId
 @[inline]
 pub fn create_segment_shape(bodyId BodyId, def &ShapeDef, segment &Segment) ShapeId {
 	return C.b2CreateSegmentShape(bodyId, def, segment)
 }
 
-/// Create a capsule shape and attach it to a body. The shape definition and geometry are fully cloned.
-/// Contacts are not created until the next time step.
-///	@return the shape id for accessing the shape
+// Create a capsule shape and attach it to a body. The shape definition and geometry are fully cloned.
+// Contacts are not created until the next time step.
+//	@return the shape id for accessing the shape
 fn C.b2CreateCapsuleShape(bodyId BodyId, def &ShapeDef, capsule &Capsule) ShapeId
 @[inline]
 pub fn create_capsule_shape(bodyId BodyId, def &ShapeDef, capsule &Capsule) ShapeId {
 	return C.b2CreateCapsuleShape(bodyId, def, capsule)
 }
 
-/// Create a polygon shape and attach it to a body. The shape definition and geometry are fully cloned.
-/// Contacts are not created until the next time step.
-///	@return the shape id for accessing the shape
+// Create a polygon shape and attach it to a body. The shape definition and geometry are fully cloned.
+// Contacts are not created until the next time step.
+//	@return the shape id for accessing the shape
 fn C.b2CreatePolygonShape(bodyId BodyId, def &ShapeDef, polygon &Polygon) ShapeId
 @[inline]
 pub fn create_polygon_shape(bodyId BodyId, def &ShapeDef, polygon &Polygon) ShapeId {
 	return C.b2CreatePolygonShape(bodyId, def, polygon)
 }
 
-/// Destroy a shape
+// Destroy a shape
 fn C.b2DestroyShape(shapeId ShapeId)
 @[inline]
 pub fn destroy_shape(shapeId ShapeId) {
 	C.b2DestroyShape(shapeId)
 }
 
-/// Shape identifier validation. Provides validation for up to 64K allocations.
+// Shape identifier validation. Provides validation for up to 64K allocations.
 fn C.b2Shape_IsValid(id ShapeId) bool
 @[inline]
 pub fn shape_is_valid(id ShapeId) bool {
 	return C.b2Shape_IsValid(id)
 }
 
-/// Get the type of a shape
+// Get the type of a shape
 fn C.b2Shape_GetType(shapeId ShapeId) ShapeType
 @[inline]
 pub fn shape_get_type(shapeId ShapeId) ShapeType {
  	return C.b2Shape_GetType(shapeId) 
 }
 
-/// Get the id of the body that a shape is attached to
+// Get the id of the body that a shape is attached to
 fn C.b2Shape_GetBody(shapeId ShapeId) BodyId
 @[inline]
 pub fn shape_get_body(shapeId ShapeId) BodyId {
 	return C.b2Shape_GetBody(shapeId)
 }
 
-/// Returns true If the shape is a sensor
+// Returns true If the shape is a sensor
 fn C.b2Shape_IsSensor(shapeId ShapeId) bool
 @[inline]
 pub fn shape_is_sensor(shapeId ShapeId) bool {
 	return C.b2Shape_IsSensor(shapeId)
 }
 
-/// Set the user data for a shape
+// Set the user data for a shape
 fn C.b2Shape_SetUserData(shapeId ShapeId, userData voidptr)
 @[inline]
 pub fn shape_set_user_data(shapeId ShapeId, userData voidptr) {
 	C.b2Shape_SetUserData(shapeId, userData)
 }
 
-/// Get the user data for a shape. This is useful when you get a shape id
-///	from an event or query.
+// Get the user data for a shape. This is useful when you get a shape id
+//	from an event or query.
 fn C.b2Shape_GetUserData(shapeId ShapeId) voidptr
 @[inline]
 pub fn shape_get_user_data(shapeId ShapeId) voidptr {
 	return C.b2Shape_GetUserData(shapeId)
 }
 
-/// Set the mass density of a shape, typically in kg/m^2.
-///	This will not update the mass properties on the parent body.
-///	@see b2ShapeDef::density, b2Body_ApplyMassFromShapes
+// Set the mass density of a shape, typically in kg/m^2.
+//	This will not update the mass properties on the parent body.
+//	@see b2ShapeDef::density, b2Body_ApplyMassFromShapes
 fn C.b2Shape_SetDensity(shapeId ShapeId, density f32)
 @[inline]
 pub fn shape_set_density(shapeId ShapeId, density f32) {
 	C.b2Shape_SetDensity(shapeId, density)
 }
 
-/// Get the density of a shape, typically in kg/m^2
+// Get the density of a shape, typically in kg/m^2
 fn C.b2Shape_GetDensity(shapeId ShapeId) f32
 @[inline]
 pub fn shape_get_density(shapeId ShapeId) f32 {
 	return C.b2Shape_GetDensity(shapeId)
 }
 
-/// Set the friction on a shape
-///	@see b2ShapeDef::friction
+// Set the friction on a shape
+//	@see b2ShapeDef::friction
 fn C.b2Shape_SetFriction(shapeId ShapeId, friction f32)
 @[inline]
 pub fn shape_set_friction(shapeId ShapeId, friction f32) {
 	C.b2Shape_SetFriction(shapeId, friction)
 }
 
-/// Get the friction of a shape
+// Get the friction of a shape
 fn C.b2Shape_GetFriction(shapeId ShapeId) f32
 @[inline]
 pub fn shape_get_friction(shapeId ShapeId) f32 {
 	return C.b2Shape_GetFriction(shapeId)
 }
 
-/// Set the shape restitution (bounciness)
-///	@see b2ShapeDef::restitution
+// Set the shape restitution (bounciness)
+//	@see b2ShapeDef::restitution
 fn C.b2Shape_SetRestitution(shapeId ShapeId, restitution f32)
 @[inline]
 pub fn shape_set_restitution(shapeId ShapeId, restitution f32) {
 	C.b2Shape_SetRestitution(shapeId, restitution)
 }
 
-/// Get the shape restitution
+// Get the shape restitution
 fn C.b2Shape_GetRestitution(shapeId ShapeId) f32
 @[inline]
 pub fn shape_get_restitution(shapeId ShapeId) f32 {
 	return C.b2Shape_GetRestitution(shapeId)
 }
 
-/// Get the shape filter
+// Get the shape filter
 fn C.b2Shape_GetFilter(shapeId ShapeId) Filter
 @[inline]
 pub fn shape_get_filter(shapeId ShapeId) Filter {
 	return C.b2Shape_GetFilter(shapeId)
 }
 
-/// Set the current filter. This is almost as expensive as recreating the shape.
-///	@see b2ShapeDef::filter
+// Set the current filter. This is almost as expensive as recreating the shape.
+//	@see b2ShapeDef::filter
 fn C.b2Shape_SetFilter(shapeId ShapeId, filter Filter)
 @[inline]
 pub fn shape_set_filter(shapeId ShapeId, filter Filter) {
 	C.b2Shape_SetFilter(shapeId, filter)
 }
 
-/// Enable sensor events for this shape. Only applies to kinematic and dynamic bodies. Ignored for sensors.
-///	@see b2ShapeDef::isSensor
+// Enable sensor events for this shape. Only applies to kinematic and dynamic bodies. Ignored for sensors.
+//	@see b2ShapeDef::isSensor
 fn C.b2Shape_EnableSensorEvents(shapeId ShapeId, flag bool)
 @[inline]
 pub fn shape_enable_sensor_events(shapeId ShapeId, flag bool) {
 	C.b2Shape_EnableSensorEvents(shapeId, flag)
 }
 
-/// Returns true if sensor events are enabled
+// Returns true if sensor events are enabled
 fn C.b2Shape_AreSensorEventsEnabled(shapeId ShapeId) bool
 @[inline]
 pub fn shape_are_sensor_events_enabled(shapeId ShapeId) bool {
 	return C.b2Shape_AreSensorEventsEnabled(shapeId)
 }
 
-/// Enable contact events for this shape. Only applies to kinematic and dynamic bodies. Ignored for sensors.
-///	@see b2ShapeDef::enableContactEvents
+// Enable contact events for this shape. Only applies to kinematic and dynamic bodies. Ignored for sensors.
+//	@see b2ShapeDef::enableContactEvents
 fn C.b2Shape_EnableContactEvents(shapeId ShapeId, flag bool)
 @[inline]
 pub fn shape_enable_contact_events(shapeId ShapeId, flag bool) {
 	C.b2Shape_EnableContactEvents(shapeId, flag)
 }
 
-/// Returns true if contact events are enabled
+// Returns true if contact events are enabled
 fn C.b2Shape_AreContactEventsEnabled(shapeId ShapeId) bool
 @[inline]
 pub fn shape_are_contact_events_enabled(shapeId ShapeId) bool {
 	return C.b2Shape_AreContactEventsEnabled(shapeId)
 }
 
-/// Enable pre-solve contact events for this shape. Only applies to dynamic bodies. These are expensive
-///	and must be carefully handled due to multithreading. Ignored for sensors.
-///	@see b2PreSolveFcn
+// Enable pre-solve contact events for this shape. Only applies to dynamic bodies. These are expensive
+//	and must be carefully handled due to multithreading. Ignored for sensors.
+//	@see b2PreSolveFcn
 fn C.b2Shape_EnablePreSolveEvents(shapeId ShapeId, flag bool)
 @[inline]
 pub fn shape_enable_pre_solve_events(shapeId ShapeId, flag bool) {
 	C.b2Shape_EnablePreSolveEvents(shapeId, flag)
 }
 
-/// Returns true if pre-solve events are enabled
+// Returns true if pre-solve events are enabled
 fn C.b2Shape_ArePreSolveEventsEnabled(shapeId ShapeId) bool
 @[inline]
 pub fn shape_are_pre_solve_events_enabled(shapeId ShapeId) bool {
 	return C.b2Shape_ArePreSolveEventsEnabled(shapeId)
 }
 
-/// Enable contact hit events for this shape. Ignored for sensors.
-///	@see b2WorldDef.hitEventThreshold
+// Enable contact hit events for this shape. Ignored for sensors.
+//	@see b2WorldDef.hitEventThreshold
 fn C.b2Shape_EnableHitEvents(shapeId ShapeId, flag bool)
 @[inline]
 pub fn shape_enable_hit_events(shapeId ShapeId, flag bool) {
 	C.b2Shape_EnableHitEvents(shapeId, flag)
 }
 
-/// Returns true if hit events are enabled
+// Returns true if hit events are enabled
 fn C.b2Shape_AreHitEventsEnabled(shapeId ShapeId) bool
 @[inline]
 pub fn shape_are_hit_events_enabled(shapeId ShapeId) bool {
 	return C.b2Shape_AreHitEventsEnabled(shapeId)
 }
 
-/// Test a point for overlap with a shape
+// Test a point for overlap with a shape
 fn C.b2Shape_TestPoint(shapeId ShapeId, point Vec2) bool
 @[inline]
 pub fn shape_test_point(shapeId ShapeId, point Vec2) bool {
 	return C.b2Shape_TestPoint(shapeId, point)
 }
 
-/// Ray cast a shape directly
+// Ray cast a shape directly
 fn C.b2Shape_RayCast(shapeId ShapeId, origin Vec2, translation Vec2) CastOutput
 @[inline]
 pub fn shape_ray_cast(shapeId ShapeId, origin Vec2, translation Vec2) CastOutput {
 	return C.b2Shape_RayCast(shapeId, origin, translation)
 }
 
-/// Get a copy of the shape's circle. Asserts the type is correct.
+// Get a copy of the shape's circle. Asserts the type is correct.
 fn C.b2Shape_GetCircle(shapeId ShapeId) Circle
 @[inline]
 pub fn shape_get_circle(shapeId ShapeId) Circle {
 	return C.b2Shape_GetCircle(shapeId)
 }
 
-/// Get a copy of the shape's line segment. Asserts the type is correct.
+// Get a copy of the shape's line segment. Asserts the type is correct.
 fn C.b2Shape_GetSegment(shapeId ShapeId) Segment 
 @[inline]
 pub fn shape_get_segment(shapeId ShapeId) Segment  {
 	return C.b2Shape_GetSegment(shapeId)
 }
 
-/// Get a copy of the shape's smooth line segment. These come from chain shapes.
-/// Asserts the type is correct.
+// Get a copy of the shape's smooth line segment. These come from chain shapes.
+// Asserts the type is correct.
 fn C.b2Shape_GetSmoothSegment(shapeId ShapeId) SmoothSegment 
 @[inline]
 pub fn shape_get_smooth_segment(shapeId ShapeId) SmoothSegment  {
 	return C.b2Shape_GetSmoothSegment(shapeId)
 }
 
-/// Get a copy of the shape's capsule. Asserts the type is correct.
+// Get a copy of the shape's capsule. Asserts the type is correct.
 fn C.b2Shape_GetCapsule(shapeId ShapeId) Capsule
 @[inline]
 pub fn shape_get_capsule(shapeId ShapeId) Capsule {
 	return C.b2Shape_GetCapsule(shapeId)
 }
 
-/// Get a copy of the shape's convex polygon. Asserts the type is correct.
+// Get a copy of the shape's convex polygon. Asserts the type is correct.
 fn C.b2Shape_GetPolygon(shapeId ShapeId) Polygon
 @[inline]
 pub fn shape_get_polygon(shapeId ShapeId) Polygon {
 	return C.b2Shape_GetPolygon(shapeId)
 }
 
-/// Allows you to change a shape to be a circle or update the current circle.
-/// This does not modify the mass properties.
-///	@see b2Body_ApplyMassFromShapes
+// Allows you to change a shape to be a circle or update the current circle.
+// This does not modify the mass properties.
+//	@see b2Body_ApplyMassFromShapes
 fn C.b2Shape_SetCircle(shapeId ShapeId, circle &Circle)
 @[inline]
 pub fn shape_set_circle(shapeId ShapeId, circle &Circle) {
 	C.b2Shape_SetCircle(shapeId, circle)
 }
 
-/// Allows you to change a shape to be a capsule or update the current capsule.
-/// This does not modify the mass properties.
-///	@see b2Body_ApplyMassFromShapes
+// Allows you to change a shape to be a capsule or update the current capsule.
+// This does not modify the mass properties.
+//	@see b2Body_ApplyMassFromShapes
 fn C.b2Shape_SetCapsule(shapeId ShapeId, capsule &Capsule)
 @[inline]
 pub fn shape_set_capsule(shapeId ShapeId, capsule &Capsule) {
 	C.b2Shape_SetCapsule(shapeId, capsule)
 }
 
-/// Allows you to change a shape to be a segment or update the current segment.
+// Allows you to change a shape to be a segment or update the current segment.
 fn C.b2Shape_SetSegment(shapeId ShapeId, segment &Segment)
 @[inline]
 pub fn shape_set_segment(shapeId ShapeId, segment &Segment) {
 	C.b2Shape_SetSegment(shapeId, segment)
 }
 
-/// Allows you to change a shape to be a polygon or update the current polygon.
-/// This does not modify the mass properties.
-///	@see b2Body_ApplyMassFromShapes
+// Allows you to change a shape to be a polygon or update the current polygon.
+// This does not modify the mass properties.
+//	@see b2Body_ApplyMassFromShapes
 fn C.b2Shape_SetPolygon(shapeId ShapeId, polygon &Polygon)
 @[inline]
 pub fn shape_set_polygon(shapeId ShapeId, polygon &Polygon) {
 	C.b2Shape_SetPolygon(shapeId, polygon)
 }
 
-/// Get the parent chain id if the shape type is smoothSegmentShape, otherwise
-/// returns nullChainId.
+// Get the parent chain id if the shape type is smoothSegmentShape, otherwise
+// returns nullChainId.
 fn C.b2Shape_GetParentChain(shapeId ShapeId) ChainId
 @[inline]
 pub fn shape_get_parent_chain(shapeId ShapeId) ChainId {
 	return C.b2Shape_GetParentChain(shapeId)
 }
 
-/// Get the maximum capacity required for retrieving all the touching contacts on a shape
+// Get the maximum capacity required for retrieving all the touching contacts on a shape
 fn C.b2Shape_GetContactCapacity(shapeId ShapeId) int
 @[inline]
 pub fn shape_get_contact_capacity(shapeId ShapeId) int {
 	return C.b2Shape_GetContactCapacity(shapeId)
 }
 
-/// Get the touching contact data for a shape. The provided shapeId will be either shapeIdA or shapeIdB on the contact data.
+// Get the touching contact data for a shape. The provided shapeId will be either shapeIdA or shapeIdB on the contact data.
 fn C.b2Shape_GetContactData(shapeId ShapeId, contactData &ContactData, capacity int) int
 @[inline]
 pub fn shape_get_contact_data(shapeId ShapeId, contactData &ContactData, capacity int) int {
 	return C.b2Shape_GetContactData(shapeId, contactData, capacity)
 }
 
-/// Get the current world AABB
+// Get the current world AABB
 fn C.b2Shape_GetAABB(shapeId ShapeId) AABB
 @[inline]
 pub fn shape_get_aabb(shapeId ShapeId) AABB {
 	return C.b2Shape_GetAABB(shapeId)
 }
 
-/// Get the closest point on a shape to a target point. Target and result are in world space.
+// Get the closest point on a shape to a target point. Target and result are in world space.
 fn C.b2Shape_GetClosestPoint(shapeId ShapeId, target Vec2) Vec2
 @[inline]
 pub fn shape_get_closest_point(shapeId ShapeId, target Vec2) Vec2 {
 	return C.b2Shape_GetClosestPoint(shapeId, target)
 }
 
-/// Chain Shape
+// Chain Shape
 
-/// Create a chain shape
-///	@see b2ChainDef for details
+// Create a chain shape
+//	@see b2ChainDef for details
 fn C.b2CreateChain(bodyId BodyId, def &ChainDef) ChainId
 @[inline]
 pub fn create_chain(bodyId BodyId, def &ChainDef) ChainId {
 	return C.b2CreateChain(bodyId, def)
 }
 
-/// Destroy a chain shape
+// Destroy a chain shape
 fn C.b2DestroyChain(chainId ChainId)
 @[inline]
 pub fn destroy_chain(chainId ChainId) {
 	C.b2DestroyChain(chainId)
 }
 
-/// Set the chain friction
-/// @see b2ChainDef::friction
+// Set the chain friction
+// @see b2ChainDef::friction
 fn C.b2Chain_SetFriction(chainId ChainId, friction f32)
 @[inline]
 pub fn chain_set_friction(chainId ChainId, friction f32) {
 	C.b2Chain_SetFriction(chainId, friction)
 }
 
-/// Set the chain restitution (bounciness)
-/// @see b2ChainDef::restitution
+// Set the chain restitution (bounciness)
+// @see b2ChainDef::restitution
 fn C.b2Chain_SetRestitution(chainId ChainId, restitution f32)
 @[inline]
 pub fn chain_set_restitution(chainId ChainId, restitution f32) {
 	C.b2Chain_SetRestitution(chainId, restitution)
 }
 
-/// Chain identifier validation. Provides validation for up to 64K allocations.
+// Chain identifier validation. Provides validation for up to 64K allocations.
 fn C.b2Chain_IsValid(id ChainId) bool
 @[inline]
 pub fn chain_is_valid(id ChainId) bool {
@@ -4223,98 +4223,98 @@ pub fn chain_is_valid(id ChainId) bool {
  * @{
  */
 
-/// Destroy a joint
+// Destroy a joint
 fn C.b2DestroyJoint(jointId JointId)
 @[inline]
 pub fn destroy_joint(jointId JointId) {
 	C.b2DestroyJoint(jointId)
 }
 
-/// Joint identifier validation. Provides validation for up to 64K allocations.
+// Joint identifier validation. Provides validation for up to 64K allocations.
 fn C.b2Joint_IsValid(id JointId) bool
 @[inline]
 pub fn joint_is_valid(id JointId) bool {
 	return C.b2Joint_IsValid(id)
 }
 
-/// Get the joint type
+// Get the joint type
 fn C.b2Joint_GetType(jointId JointId) JointType
 @[inline]
 pub fn joint_get_type(jointId JointId) JointType {
 	return C.b2Joint_GetType(jointId)
 }
 
-/// Get body A id on a joint
+// Get body A id on a joint
 fn C.b2Joint_GetBodyA(jointId JointId) BodyId
 @[inline]
 pub fn joint_get_body_a(jointId JointId) BodyId {
 	return C.b2Joint_GetBodyA(jointId)
 }
 
-/// Get body B id on a joint
+// Get body B id on a joint
 fn C.b2Joint_GetBodyB(jointId JointId) BodyId
 @[inline]
 pub fn joint_get_body_b(jointId JointId) BodyId {
 	return C.b2Joint_GetBodyB(jointId)
 }
 
-/// Get the local anchor on bodyA
+// Get the local anchor on bodyA
 fn C.b2Joint_GetLocalAnchorA(jointId JointId) Vec2
 @[inline]
 pub fn joint_get_local_anchor_a(jointId JointId) Vec2 {
 	return C.b2Joint_GetLocalAnchorA(jointId)
 }
 
-/// Get the local anchor on bodyB
+// Get the local anchor on bodyB
 fn C.b2Joint_GetLocalAnchorB(jointId JointId) Vec2
 @[inline]
 pub fn joint_get_local_anchor_b(jointId JointId) Vec2 {
 	return C.b2Joint_GetLocalAnchorB(jointId)
 }
 
-/// Toggle collision between connected bodies
+// Toggle collision between connected bodies
 fn C.b2Joint_SetCollideConnected(jointId JointId, shouldCollide bool)
 @[inline]
 pub fn joint_set_collide_connected(jointId JointId, shouldCollide bool) {
 	C.b2Joint_SetCollideConnected(jointId, shouldCollide)
 }
 
-/// Is collision allowed between connected bodies?
+// Is collision allowed between connected bodies?
 fn C.b2Joint_GetCollideConnected(jointId JointId) bool
 @[inline]
 pub fn joint_get_collide_connected(jointId JointId) bool {
 	return C.b2Joint_GetCollideConnected(jointId)
 }
 
-/// Set the user data on a joint
+// Set the user data on a joint
 fn C.b2Joint_SetUserData(jointId JointId, userData voidptr)
 @[inline]
 pub fn joint_set_user_data(jointId JointId, userData voidptr) {
 	C.b2Joint_SetUserData(jointId, userData)
 }
 
-/// Get the user data on a joint
+// Get the user data on a joint
 fn C.b2Joint_GetUserData(jointId JointId) voidptr
 @[inline]
 pub fn joint_get_user_data(jointId JointId) voidptr {
 	return C.b2Joint_GetUserData(jointId)
 }
 
-/// Wake the bodies connect to this joint
+// Wake the bodies connect to this joint
 fn C.b2Joint_WakeBodies(jointId JointId)
 @[inline]
 pub fn joint_wake_bodies(jointId JointId) {
 	C.b2Joint_WakeBodies(jointId)
 }
 
-/// Get the current constraint force for this joint
+// Get the current constraint force for this joint
 fn C.b2Joint_GetConstraintForce(jointId JointId) Vec2
 @[inline]
 pub fn joint_get_constraint_force(jointId JointId) Vec2 {
 	return C.b2Joint_GetConstraintForce(jointId)
 }
 
-/// Get the current constraint torque for this joint
+// Get the current constraint torque for this joint
 fn C.b2Joint_GetConstraintTorque(jointId JointId) f32
 @[inline]
 pub fn joint_get_constraint_torque(jointId JointId) f32 {
@@ -4327,158 +4327,158 @@ pub fn joint_get_constraint_torque(jointId JointId) f32 {
  * @{
  */
 
-/// Create a distance joint
-///	@see b2DistanceJointDef for details
+// Create a distance joint
+//	@see b2DistanceJointDef for details
 fn C.b2CreateDistanceJoint(worldId WorldId, def &DistanceJointDef) JointId 
 @[inline]
 pub fn create_distance_joint(worldId WorldId, def &DistanceJointDef) JointId  {
 	return C.b2CreateDistanceJoint(worldId, def)
 }
 
-/// Set the rest length of a distance joint
-/// @param jointId The id for a distance joint
-/// @param length The new distance joint length
+// Set the rest length of a distance joint
+// @param jointId The id for a distance joint
+// @param length The new distance joint length
 fn C.b2DistanceJoint_SetLength(jointId JointId, length f32)
 @[inline]
 pub fn distance_joint_set_length(jointId JointId, length f32) {
 	C.b2DistanceJoint_SetLength(jointId, length)
 }
 
-/// Get the rest length of a distance joint
+// Get the rest length of a distance joint
 fn C.b2DistanceJoint_GetLength(jointId JointId) f32
 @[inline]
 pub fn distance_joint_get_length(jointId JointId) f32 {
 	return C.b2DistanceJoint_GetLength(jointId)
 }
 
-/// Enable/disable the distance joint spring. When disabled the distance joint is rigid.
+// Enable/disable the distance joint spring. When disabled the distance joint is rigid.
 fn C.b2DistanceJoint_EnableSpring(jointId JointId, enableSpring bool)
 @[inline]
 pub fn distance_joint_enable_spring(jointId JointId, enableSpring bool) {
 	C.b2DistanceJoint_EnableSpring(jointId, enableSpring)
 }
 
-/// Is the distance joint spring enabled?
+// Is the distance joint spring enabled?
 fn C.b2DistanceJoint_IsSpringEnabled(jointId JointId) bool
 @[inline]
 pub fn distance_joint_is_spring_enabled(jointId JointId) bool {
 	return C.b2DistanceJoint_IsSpringEnabled(jointId)
 }
 
-/// Set the spring stiffness in Hertz
+// Set the spring stiffness in Hertz
 fn C.b2DistanceJoint_SetSpringHertz(jointId JointId, hertz f32)
 @[inline]
 pub fn distance_joint_set_spring_hertz(jointId JointId, hertz f32) {
 	C.b2DistanceJoint_SetSpringHertz(jointId, hertz)
 }
 
-/// Set the spring damping ratio, non-dimensional
+// Set the spring damping ratio, non-dimensional
 fn C.b2DistanceJoint_SetSpringDampingRatio(jointId JointId, dampingRatio f32)
 @[inline]
 pub fn distance_joint_set_spring_damping_ratio(jointId JointId, dampingRatio f32) {
 	C.b2DistanceJoint_SetSpringDampingRatio(jointId, dampingRatio)
 }
 
-/// Get the spring Hertz
+// Get the spring Hertz
 fn C.b2DistanceJoint_GetHertz(jointId JointId) f32
 @[inline]
 pub fn distance_joint_get_hertz(jointId JointId) f32 {
 	return C.b2DistanceJoint_GetHertz(jointId)
 }
 
-/// Get the spring damping ratio
+// Get the spring damping ratio
 fn C.b2DistanceJoint_GetDampingRatio(jointId JointId) f32
 @[inline]
 pub fn distance_joint_get_damping_ratio(jointId JointId) f32 {
 	return C.b2DistanceJoint_GetDampingRatio(jointId)
 }
 
-/// Enable joint limit. The limit only works if the joint spring is enabled. Otherwise the joint is rigid
-///	and the limit has no effect.
+// Enable joint limit. The limit only works if the joint spring is enabled. Otherwise the joint is rigid
+//	and the limit has no effect.
 fn C.b2DistanceJoint_EnableLimit(jointId JointId, enableLimit bool)
 @[inline]
 pub fn distance_joint_enable_limit(jointId JointId, enableLimit bool) {
 	C.b2DistanceJoint_EnableLimit(jointId, enableLimit)
 }
 
-/// Is the distance joint limit enabled?
+// Is the distance joint limit enabled?
 fn C.b2DistanceJoint_IsLimitEnabled(jointId JointId) bool
 @[inline]
 pub fn distance_joint_is_limit_enabled(jointId JointId) bool {
 	return C.b2DistanceJoint_IsLimitEnabled(jointId)
 }
 
-/// Set the minimum and maximum length parameters of a distance joint
+// Set the minimum and maximum length parameters of a distance joint
 fn C.b2DistanceJoint_SetLengthRange(jointId JointId, minLength f32, maxLength f32)
 @[inline]
 pub fn distance_joint_set_length_range(jointId JointId, minLength f32, maxLength f32) {
 	C.b2DistanceJoint_SetLengthRange(jointId, minLength, maxLength)
 }
 
-/// Get the distance joint minimum length
+// Get the distance joint minimum length
 fn C.b2DistanceJoint_GetMinLength(jointId JointId) f32
 @[inline]
 pub fn distance_joint_get_min_length(jointId JointId) f32 {
 	return C.b2DistanceJoint_GetMinLength(jointId)
 }
 
-/// Get the distance joint maximum length
+// Get the distance joint maximum length
 fn C.b2DistanceJoint_GetMaxLength(jointId JointId) f32
 @[inline]
 pub fn distance_joint_get_max_length(jointId JointId) f32 {
 	return C.b2DistanceJoint_GetMaxLength(jointId)
 }
 
-/// Get the current length of a distance joint
+// Get the current length of a distance joint
 fn C.b2DistanceJoint_GetCurrentLength(jointId JointId) f32
 @[inline]
 pub fn distance_joint_get_current_length(jointId JointId) f32 {
 	return C.b2DistanceJoint_GetCurrentLength(jointId) 
 }
 
-/// Enable/disable the distance joint motor
+// Enable/disable the distance joint motor
 fn C.b2DistanceJoint_EnableMotor(jointId JointId, enableMotor bool)
 @[inline]
 pub fn distance_joint_enable_motor(jointId JointId, enableMotor bool) {
 	C.b2DistanceJoint_EnableMotor(jointId, enableMotor)
 }
 
-/// Is the distance joint motor enabled?
+// Is the distance joint motor enabled?
 fn C.b2DistanceJoint_IsMotorEnabled(jointId JointId) bool
 @[inline]
 pub fn distance_joint_is_motor_enabled(jointId JointId) bool {
 	return C.b2DistanceJoint_IsMotorEnabled(jointId)
 }
 
-/// Set the distance joint motor speed, typically in meters per second
+// Set the distance joint motor speed, typically in meters per second
 fn C.b2DistanceJoint_SetMotorSpeed(jointId JointId, motorSpeed f32)
 @[inline]
 pub fn distance_joint_set_motor_speed(jointId JointId, motorSpeed f32) {
 	C.b2DistanceJoint_SetMotorSpeed(jointId, motorSpeed)
 }
 
-/// Get the distance joint motor speed, typically in meters per second
+// Get the distance joint motor speed, typically in meters per second
 fn C.b2DistanceJoint_GetMotorSpeed(jointId JointId) f32
 @[inline]
 pub fn distance_joint_get_motor_speed(jointId JointId) f32 {
 	return C.b2DistanceJoint_GetMotorSpeed(jointId)
 }
 
-/// Set the distance joint maximum motor force, typically in newtons
+// Set the distance joint maximum motor force, typically in newtons
 fn C.b2DistanceJoint_SetMaxMotorForce(jointId JointId, force f32)
 @[inline]
 pub fn distance_joint_set_max_motor_force(jointId JointId, force f32) {
 	C.b2DistanceJoint_SetMaxMotorForce(jointId, force)
 }
 
-/// Get the distance joint maximum motor force, typically in newtons
+// Get the distance joint maximum motor force, typically in newtons
 fn C.b2DistanceJoint_GetMaxMotorForce(jointId JointId) f32
 @[inline]
 pub fn distance_joint_get_max_motor_force(jointId JointId) f32 {
 	return C.b2DistanceJoint_GetMaxMotorForce(jointId)
 }
 
-/// Get the distance joint current motor force, typically in newtons
+// Get the distance joint current motor force, typically in newtons
 fn C.b2DistanceJoint_GetMotorForce(jointId JointId) f32
 @[inline]
 pub fn distance_joint_get_motor_force(jointId JointId) f32 {
@@ -4497,78 +4497,78 @@ pub fn distance_joint_get_motor_force(jointId JointId) f32 {
  * @{
  */
 
-/// Create a motor joint
-///	@see b2MotorJointDef for details
+// Create a motor joint
+//	@see b2MotorJointDef for details
 fn C.b2CreateMotorJoint(worldId WorldId, def &MotorJointDef) JointId
 @[inline]
 pub fn create_motor_joint(worldId WorldId, def &MotorJointDef) JointId {
 	return C.b2CreateMotorJoint(worldId, def)
 }
 
-/// Set the motor joint linear offset target
+// Set the motor joint linear offset target
 fn C.b2MotorJoint_SetLinearOffset(jointId JointId, linearOffset Vec2)
 @[inline]
 pub fn motor_joint_set_linear_offset(jointId JointId, linearOffset Vec2) {
 	C.b2MotorJoint_SetLinearOffset(jointId, linearOffset)
 }
 
-/// Get the motor joint linear offset target
+// Get the motor joint linear offset target
 fn C.b2MotorJoint_GetLinearOffset(jointId JointId) Vec2
 @[inline]
 pub fn motor_joint_get_linear_offset(jointId JointId) Vec2 {
 	return C.b2MotorJoint_GetLinearOffset(jointId)
 }
 
-/// Set the motor joint angular offset target in radians
+// Set the motor joint angular offset target in radians
 fn C.b2MotorJoint_SetAngularOffset(jointId JointId, angularOffset f32)
 @[inline]
 pub fn motor_joint_set_angular_offset(jointId JointId, angularOffset f32) {
 	C.b2MotorJoint_SetAngularOffset(jointId, angularOffset)
 }
 
-/// Get the motor joint angular offset target in radians
+// Get the motor joint angular offset target in radians
 fn C.b2MotorJoint_GetAngularOffset(jointId JointId) f32
 @[inline]
 pub fn motor_joint_get_angular_offset(jointId JointId) f32 {
 	return C.b2MotorJoint_GetAngularOffset(jointId) 
 }
 
-/// Set the motor joint maximum force, typically in newtons
+// Set the motor joint maximum force, typically in newtons
 fn C.b2MotorJoint_SetMaxForce(jointId JointId, maxForce f32)
 @[inline]
 pub fn motor_joint_set_max_force(jointId JointId, maxForce f32) {
 	C.b2MotorJoint_SetMaxForce(jointId, maxForce)
 }
 
-/// Get the motor joint maximum force, typically in newtons
+// Get the motor joint maximum force, typically in newtons
 fn C.b2MotorJoint_GetMaxForce(jointId JointId) f32
 @[inline]
 pub fn motor_joint_get_max_force(jointId JointId) f32 {
 	return C.b2MotorJoint_GetMaxForce(jointId)
 }
 
-/// Set the motor joint maximum torque, typically in newton-meters
+// Set the motor joint maximum torque, typically in newton-meters
 fn C.b2MotorJoint_SetMaxTorque(jointId JointId, maxTorque f32)
 @[inline]
 pub fn motor_joint_set_max_torque(jointId JointId, maxTorque f32) {
 	C.b2MotorJoint_SetMaxTorque(jointId, maxTorque)
 }
 
-/// Get the motor joint maximum torque, typically in newton-meters
+// Get the motor joint maximum torque, typically in newton-meters
 fn C.b2MotorJoint_GetMaxTorque(jointId JointId) f32
 @[inline]
 pub fn motor_joint_get_max_torque(jointId JointId) f32 {
 	return C.b2MotorJoint_GetMaxTorque(jointId)
 }
 
-/// Set the motor joint correction factor, typically in [0, 1]
+// Set the motor joint correction factor, typically in [0, 1]
 fn C.b2MotorJoint_SetCorrectionFactor(jointId JointId, correctionFactor f32)
 @[inline]
 pub fn motor_joint_set_correction_factor(jointId JointId, correctionFactor f32) {
 	C.b2MotorJoint_SetCorrectionFactor(jointId, correctionFactor)
 }
 
-/// Get the motor joint correction factor, typically in [0, 1]
+// Get the motor joint correction factor, typically in [0, 1]
 fn C.b2MotorJoint_GetCorrectionFactor(jointId JointId) f32
 @[inline]
 pub fn motor_joint_get_correction_factor(jointId JointId) f32  {
@@ -4586,64 +4586,64 @@ pub fn motor_joint_get_correction_factor(jointId JointId) f32  {
  * @{
  */
 
-/// Create a mouse joint
-///	@see b2MouseJointDef for details
+// Create a mouse joint
+//	@see b2MouseJointDef for details
 fn C.b2CreateMouseJoint(worldId WorldId, def &MouseJointDef) JointId
 @[inline]
 pub fn create_mouse_joint(worldId WorldId, def &MouseJointDef) JointId {
 	return C.b2CreateMouseJoint(worldId, def)
 }
 
-/// Set the mouse joint target
+// Set the mouse joint target
 fn C.b2MouseJoint_SetTarget(jointId JointId, target Vec2)
 @[inline]
 pub fn mouse_joint_set_target(jointId JointId, target Vec2)  {
 	C.b2MouseJoint_SetTarget(jointId, target)
 }
 
-/// Get the mouse joint target
+// Get the mouse joint target
 fn C.b2MouseJoint_GetTarget(jointId JointId) Vec2
 @[inline]
 pub fn mouse_joint_get_target(jointId JointId) Vec2 {
 	return C.b2MouseJoint_GetTarget(jointId)
 }
 
-/// Set the mouse joint spring stiffness in Hertz
+// Set the mouse joint spring stiffness in Hertz
 fn C.b2MouseJoint_SetSpringHertz(jointId JointId, hertz f32)
 @[inline]
 pub fn mouse_joint_set_spring_hertz(jointId JointId, hertz f32) {
 	C.b2MouseJoint_SetSpringHertz(jointId, hertz)
 }
 
-/// Get the mouse joint spring stiffness in Hertz
+// Get the mouse joint spring stiffness in Hertz
 fn C.b2MouseJoint_GetSpringHertz(jointId JointId) f32
 @[inline]
 pub fn mouse_joint_get_spring_hertz(jointId JointId) f32 {
 	return C.b2MouseJoint_GetSpringHertz(jointId)
 }
 
-/// Set the mouse joint spring damping ratio, non-dimensional
+// Set the mouse joint spring damping ratio, non-dimensional
 fn C.b2MouseJoint_SetSpringDampingRatio(jointId JointId, dampingRatio f32)
 @[inline]
 pub fn mouse_joint_set_spring_damping_ratio(jointId JointId, dampingRatio f32) {
 	C.b2MouseJoint_SetSpringDampingRatio(jointId, dampingRatio)
 }
 
-/// Get the mouse joint damping ratio, non-dimensional
+// Get the mouse joint damping ratio, non-dimensional
 fn C.b2MouseJoint_GetSpringDampingRatio(jointId JointId) f32
 @[inline]
 pub fn mouse_joint_get_spring_damping_ratio(jointId JointId) f32 {
 	return C.b2MouseJoint_GetSpringDampingRatio(jointId)
 }
 
-/// Set the mouse joint maximum force, typically in newtons
+// Set the mouse joint maximum force, typically in newtons
 fn C.b2MouseJoint_SetMaxForce(jointId JointId, maxForce f32)
 @[inline]
 pub fn mouse_joint_set_max_force(jointId JointId, maxForce f32) {
 	C.b2MouseJoint_SetMaxForce(jointId, maxForce)
 }
 
-/// Get the mouse joint maximum force, typically in newtons
+// Get the mouse joint maximum force, typically in newtons
 fn C.b2MouseJoint_GetMaxForce(jointId JointId) f32
 @[inline]
 pub fn mouse_joint_get_max_force(jointId JointId) f32 {
@@ -4661,136 +4661,136 @@ pub fn mouse_joint_get_max_force(jointId JointId) f32 {
  * @{
  */
 
-/// Create a prismatic (slider) joint.
-///	@see b2PrismaticJointDef for details
+// Create a prismatic (slider) joint.
+//	@see b2PrismaticJointDef for details
 fn C.b2CreatePrismaticJoint(worldId WorldId, def &PrismaticJointDef) JointId
 @[inline]
 pub fn create_prismatic_joint(worldId WorldId, def &PrismaticJointDef) JointId {
 	return C.b2CreatePrismaticJoint(worldId, def) 
 }
 
-/// Enable/disable the joint spring.
+// Enable/disable the joint spring.
 fn C.b2PrismaticJoint_EnableSpring(jointId JointId, enableSpring bool)
 @[inline]
 pub fn prismatic_joint_enable_spring(jointId JointId, enableSpring bool) {
 	C.b2PrismaticJoint_EnableSpring(jointId, enableSpring)
 }
 
-/// Is the prismatic joint spring enabled or not?
+// Is the prismatic joint spring enabled or not?
 fn C.b2PrismaticJoint_IsSpringEnabled(jointId JointId) bool
 @[inline]
 pub fn prismatic_joint_is_spring_enabled(jointId JointId) bool {
 	return C.b2PrismaticJoint_IsSpringEnabled(jointId)
 }
 
-/// Set the prismatic joint stiffness in Hertz.
-/// This should usually be less than a quarter of the simulation rate. For example, if the simulation
-/// runs at 60Hz then the joint stiffness should be 15Hz or less.
+// Set the prismatic joint stiffness in Hertz.
+// This should usually be less than a quarter of the simulation rate. For example, if the simulation
+// runs at 60Hz then the joint stiffness should be 15Hz or less.
 fn C.b2PrismaticJoint_SetSpringHertz(jointId JointId, hertz f32)
 @[inline]
 pub fn prismatic_joint_set_spring_hertz(jointId JointId, hertz f32) {
 	C.b2PrismaticJoint_SetSpringHertz(jointId, hertz)
 }
 
-/// Get the prismatic joint stiffness in Hertz
+// Get the prismatic joint stiffness in Hertz
 fn C.b2PrismaticJoint_GetSpringHertz(jointId JointId) f32
 @[inline]
 pub fn prismatic_joint_get_spring_hertz(jointId JointId) f32 {
 	return C.b2PrismaticJoint_GetSpringHertz(jointId)
 }
 
-/// Set the prismatic joint damping ratio (non-dimensional)
+// Set the prismatic joint damping ratio (non-dimensional)
 fn C.b2PrismaticJoint_SetSpringDampingRatio(jointId JointId, dampingRatio f32)
 @[inline]
 pub fn prismatic_joint_set_spring_damping_ratio(jointId JointId, dampingRatio f32) {
 	C.b2PrismaticJoint_SetSpringDampingRatio(jointId, dampingRatio)
 }
 
-/// Get the prismatic spring damping ratio (non-dimensional)
+// Get the prismatic spring damping ratio (non-dimensional)
 fn C.b2PrismaticJoint_GetSpringDampingRatio(jointId JointId) f32
 @[inline]
 pub fn prismatic_joint_get_spring_damping_ratio(jointId JointId) f32 {
 	return C.b2PrismaticJoint_GetSpringDampingRatio(jointId)
 }
 
-/// Enable/disable a prismatic joint limit
+// Enable/disable a prismatic joint limit
 fn C.b2PrismaticJoint_EnableLimit(jointId JointId, enableLimit bool)
 @[inline]
 pub fn prismatic_joint_enable_limit(jointId JointId, enableLimit bool) {
 	C.b2PrismaticJoint_EnableLimit(jointId, enableLimit)
 }
 
-/// Is the prismatic joint limit enabled?
+// Is the prismatic joint limit enabled?
 fn C.b2PrismaticJoint_IsLimitEnabled(jointId JointId) bool
 @[inline]
 pub fn prismatic_joint_is_limit_enabled(jointId JointId) bool {
 	return C.b2PrismaticJoint_IsLimitEnabled(jointId)
 }
 
-/// Get the prismatic joint lower limit
+// Get the prismatic joint lower limit
 fn C.b2PrismaticJoint_GetLowerLimit(jointId JointId) f32
 @[inline]
 pub fn prismatic_joint_get_lower_limit(jointId JointId) f32 {
 	return C.b2PrismaticJoint_GetLowerLimit(jointId)
 }
 
-/// Get the prismatic joint upper limit
+// Get the prismatic joint upper limit
 fn C.b2PrismaticJoint_GetUpperLimit(jointId JointId) f32
 @[inline]
 pub fn prismatic_joint_get_upper_limit(jointId JointId) f32 {
 	return C.b2PrismaticJoint_GetUpperLimit(jointId)
 }
 
-/// Set the prismatic joint limits
+// Set the prismatic joint limits
 fn C.b2PrismaticJoint_SetLimits(jointId JointId, lower f32, upper f32)
 @[inline]
 pub fn prismatic_joint_set_limits(jointId JointId, lower f32, upper f32) {
 	C.b2PrismaticJoint_SetLimits(jointId, lower, upper)
 }
 
-/// Enable/disable a prismatic joint motor
+// Enable/disable a prismatic joint motor
 fn C.b2PrismaticJoint_EnableMotor(jointId JointId, enableMotor bool)
 @[inline]
 pub fn prismatic_joint_enable_motor(jointId JointId, enableMotor bool) {
 	C.b2PrismaticJoint_EnableMotor(jointId, enableMotor)
 }
 
-/// Is the prismatic joint motor enabled?
+// Is the prismatic joint motor enabled?
 fn C.b2PrismaticJoint_IsMotorEnabled(jointId JointId) bool
 @[inline]
 pub fn prismatic_joint_is_motor_enabled(jointId JointId) bool {
 	return C.b2PrismaticJoint_IsMotorEnabled(jointId) 
 }
 
-/// Set the prismatic joint motor speed, typically in meters per second
+// Set the prismatic joint motor speed, typically in meters per second
 fn C.b2PrismaticJoint_SetMotorSpeed(jointId JointId, motorSpeed f32)
 @[inline]
 pub fn prismatic_joint_set_motor_speed(jointId JointId, motorSpeed f32) {
 	C.b2PrismaticJoint_SetMotorSpeed(jointId, motorSpeed)
 }
 
-/// Get the prismatic joint motor speed, typically in meters per second
+// Get the prismatic joint motor speed, typically in meters per second
 fn C.b2PrismaticJoint_GetMotorSpeed(jointId JointId) f32
 @[inline]
 pub fn prismatic_joint_get_motor_speed(jointId JointId) f32 {
 	return C.b2PrismaticJoint_GetMotorSpeed(jointId)
 }
 
-/// Set the prismatic joint maximum motor force, typically in newtons
+// Set the prismatic joint maximum motor force, typically in newtons
 fn C.b2PrismaticJoint_SetMaxMotorForce(jointId JointId, force f32)
 @[inline]
 pub fn prismatic_joint_set_max_motor_force(jointId JointId, force f32) {
 	C.b2PrismaticJoint_SetMaxMotorForce(jointId, force)
 }
 
-/// Get the prismatic joint maximum motor force, typically in newtons
+// Get the prismatic joint maximum motor force, typically in newtons
 fn C.b2PrismaticJoint_GetMaxMotorForce(jointId JointId) f32
 @[inline]
 pub fn prismatic_joint_get_max_motor_force(jointId JointId) f32 {
 	return C.b2PrismaticJoint_GetMaxMotorForce(jointId)
 }
 
-/// Get the prismatic joint current motor force, typically in newtons
+// Get the prismatic joint current motor force, typically in newtons
 fn C.b2PrismaticJoint_GetMotorForce(jointId JointId) f32
 @[inline]
 pub fn prismatic_joint_get_motor_force(jointId JointId) f32 {
@@ -4808,135 +4808,135 @@ pub fn prismatic_joint_get_motor_force(jointId JointId) f32 {
  * @{
  */
 
-/// Create a revolute joint
-///	@see b2RevoluteJointDef for details
+// Create a revolute joint
+//	@see b2RevoluteJointDef for details
 fn C.b2CreateRevoluteJoint(worldId WorldId, def &RevoluteJointDef) JointId
 @[inline]
 pub fn create_revolute_joint(worldId WorldId, def &RevoluteJointDef) JointId {
 	return C.b2CreateRevoluteJoint(worldId, def)
 }
 
-/// Enable/disable the revolute joint spring
+// Enable/disable the revolute joint spring
 fn C.b2RevoluteJoint_EnableSpring(jointId JointId, enableSpring bool)
 @[inline]
 pub fn revolute_joint_enable_spring(jointId JointId, enableSpring bool) {
 	C.b2RevoluteJoint_EnableSpring(jointId, enableSpring)
 }
 
-/// Set the revolute joint spring stiffness in Hertz
+// Set the revolute joint spring stiffness in Hertz
 fn C.b2RevoluteJoint_SetSpringHertz(jointId JointId, hertz f32)
 @[inline]
 pub fn revolute_joint_set_spring_hertz(jointId JointId, hertz f32) {
 	C.b2RevoluteJoint_SetSpringHertz(jointId, hertz)
 }
 
-/// Get the revolute joint spring stiffness in Hertz
+// Get the revolute joint spring stiffness in Hertz
 fn C.b2RevoluteJoint_GetSpringHertz(jointId JointId) f32
 @[inline]
 pub fn revolute_joint_get_spring_hertz(jointId JointId) f32 {
 	return C.b2RevoluteJoint_GetSpringHertz(jointId) 
 }
 
-/// Set the revolute joint spring damping ratio, non-dimensional
+// Set the revolute joint spring damping ratio, non-dimensional
 fn C.b2RevoluteJoint_SetSpringDampingRatio(jointId JointId, dampingRatio f32)
 @[inline]
 pub fn revolute_joint_set_spring_damping_ratio(jointId JointId, dampingRatio f32){
 	C.b2RevoluteJoint_SetSpringDampingRatio(jointId, dampingRatio)
 }
 
-/// Get the revolute joint spring damping ratio, non-dimensional
+// Get the revolute joint spring damping ratio, non-dimensional
 fn C.b2RevoluteJoint_GetSpringDampingRatio(jointId JointId) f32
 @[inline]
 pub fn revolute_joint_get_spring_damping_ratio(jointId JointId) f32 {
 	return C.b2RevoluteJoint_GetSpringDampingRatio(jointId)
 }
 
-/// Get the revolute joint current angle in radians relative to the reference angle
-///	@see b2RevoluteJointDef::referenceAngle
+// Get the revolute joint current angle in radians relative to the reference angle
+//	@see b2RevoluteJointDef::referenceAngle
 fn C.b2RevoluteJoint_GetAngle(jointId JointId) f32
 @[inline]
 pub fn revolute_joint_get_angle(jointId JointId) f32 {
 	return C.b2RevoluteJoint_GetAngle(jointId)
 }
 
-/// Enable/disable the revolute joint limit
+// Enable/disable the revolute joint limit
 fn C.b2RevoluteJoint_EnableLimit(jointId JointId, enableLimit bool)
 @[inline]
 pub fn revolute_joint_enable_limit(jointId JointId, enableLimit bool) {
 	C.b2RevoluteJoint_EnableLimit(jointId, enableLimit)
 }
 
-/// Is the revolute joint limit enabled?
+// Is the revolute joint limit enabled?
 fn C.b2RevoluteJoint_IsLimitEnabled(jointId JointId) bool
 @[inline]
 pub fn revolute_joint_is_limit_enabled(jointId JointId) bool {
 	return C.b2RevoluteJoint_IsLimitEnabled(jointId)
 }
 
-/// Get the revolute joint lower limit in radians
+// Get the revolute joint lower limit in radians
 fn C.b2RevoluteJoint_GetLowerLimit(jointId JointId) f32
 @[inline]
 pub fn revolute_joint_get_lower_limit(jointId JointId) f32  {
 	return C.b2RevoluteJoint_GetLowerLimit(jointId)
 }
 
-/// Get the revolute joint upper limit in radians
+// Get the revolute joint upper limit in radians
 fn C.b2RevoluteJoint_GetUpperLimit(jointId JointId) f32
 @[inline]
 pub fn revolute_joint_get_upper_limit(jointId JointId) f32 {
 	return C.b2RevoluteJoint_GetUpperLimit(jointId)
 }
 
-/// Set the revolute joint limits in radians
+// Set the revolute joint limits in radians
 fn C.b2RevoluteJoint_SetLimits(jointId JointId, lower f32, upper f32)
 @[inline]
 pub fn revolute_joint_set_limits(jointId JointId, lower f32, upper f32) {
 	C.b2RevoluteJoint_SetLimits(jointId, lower, upper)
 }
 
-/// Enable/disable a revolute joint motor
+// Enable/disable a revolute joint motor
 fn C.b2RevoluteJoint_EnableMotor(jointId JointId, enableMotor bool)
 @[inline]
 pub fn revolute_joint_enable_motor(jointId JointId, enableMotor bool) {
 	C.b2RevoluteJoint_EnableMotor(jointId, enableMotor)
 }
 
-/// Is the revolute joint motor enabled?
+// Is the revolute joint motor enabled?
 fn C.b2RevoluteJoint_IsMotorEnabled(jointId JointId) bool
 @[inline]
 pub fn revolute_joint_is_motor_enabled(jointId JointId) bool {
 	return C.b2RevoluteJoint_IsMotorEnabled(jointId)
 }
 
-/// Set the revolute joint motor speed in radians per second
+// Set the revolute joint motor speed in radians per second
 fn C.b2RevoluteJoint_SetMotorSpeed(jointId JointId, motorSpeed f32)
 @[inline]
 pub fn revolute_joint_set_motor_speed(jointId JointId, motorSpeed f32) {
 	C.b2RevoluteJoint_SetMotorSpeed(jointId, motorSpeed)
 }
 
-/// Get the revolute joint motor speed in radians per second
+// Get the revolute joint motor speed in radians per second
 fn C.b2RevoluteJoint_GetMotorSpeed(jointId JointId) f32
 @[inline]
 pub fn revolute_joint_get_motor_speed(jointId JointId) f32 {
 	return C.b2RevoluteJoint_GetMotorSpeed(jointId) 
 }
 
-/// Get the revolute joint current motor torque, typically in newton-meters
+// Get the revolute joint current motor torque, typically in newton-meters
 fn C.b2RevoluteJoint_GetMotorTorque(jointId JointId) f32
 @[inline]
 pub fn revolute_joint_get_motor_torque(jointId JointId) f32 {
 	return C.b2RevoluteJoint_GetMotorTorque(jointId) 
 }
 
-/// Set the revolute joint maximum motor torque, typically in newton-meters
+// Set the revolute joint maximum motor torque, typically in newton-meters
 fn C.b2RevoluteJoint_SetMaxMotorTorque(jointId JointId, torque f32)
 @[inline]
 pub fn revolute_joint_set_max_motor_torque(jointId JointId, torque f32) {
 	C.b2RevoluteJoint_SetMaxMotorTorque(jointId, torque)
 }
 
-/// Get the revolute joint maximum motor torque, typically in newton-meters
+// Get the revolute joint maximum motor torque, typically in newton-meters
 fn C.b2RevoluteJoint_GetMaxMotorTorque(jointId JointId) f32
 @[inline]
 pub fn revolute_joint_get_max_motor_torque(jointId JointId) f32 {
@@ -4956,64 +4956,64 @@ pub fn revolute_joint_get_max_motor_torque(jointId JointId) f32 {
  * @{
  */
 
-/// Create a weld joint
-///	@see b2WeldJointDef for details
+// Create a weld joint
+//	@see b2WeldJointDef for details
 fn C.b2CreateWeldJoint(worldId WorldId, def &WeldJointDef) JointId
 @[inline]
 pub fn create_weld_joint(worldId WorldId, def &WeldJointDef) JointId {
 	return C.b2CreateWeldJoint(worldId, def)
 }
 
-/// Set the weld joint linear stiffness in Hertz. 0 is rigid.
+// Set the weld joint linear stiffness in Hertz. 0 is rigid.
 fn C.b2WeldJoint_SetLinearHertz(jointId JointId, hertz f32)
 @[inline]
 pub fn weld_joint_set_linear_hertz(jointId JointId, hertz f32) {
 	C.b2WeldJoint_SetLinearHertz(jointId, hertz)
 }
 
-/// Get the weld joint linear stiffness in Hertz
+// Get the weld joint linear stiffness in Hertz
 fn C.b2WeldJoint_GetLinearHertz(jointId JointId) f32
 @[inline]
 pub fn weld_joint_get_linear_hertz(jointId JointId) f32 {
 	return C.b2WeldJoint_GetLinearHertz(jointId)
 }
 
-/// Set the weld joint linear damping ratio (non-dimensional)
+// Set the weld joint linear damping ratio (non-dimensional)
 fn C.b2WeldJoint_SetLinearDampingRatio(jointId JointId, dampingRatio f32)
 @[inline]
 pub fn weld_joint_set_linear_damping_ratio(jointId JointId, dampingRatio f32) {
 	C.b2WeldJoint_SetLinearDampingRatio(jointId, dampingRatio)
 }
 
-/// Get the weld joint linear damping ratio (non-dimensional)
+// Get the weld joint linear damping ratio (non-dimensional)
 fn C.b2WeldJoint_GetLinearDampingRatio(jointId JointId) f32
 @[inline]
 pub fn weld_joint_get_linear_damping_ratio(jointId JointId) f32 {
 	return C.b2WeldJoint_GetLinearDampingRatio(jointId)
 }
 
-/// Set the weld joint angular stiffness in Hertz. 0 is rigid.
+// Set the weld joint angular stiffness in Hertz. 0 is rigid.
 fn C.b2WeldJoint_SetAngularHertz(jointId JointId, hertz f32)
 @[inline]
 pub fn weld_joint_set_angular_hertz(jointId JointId, hertz f32) {
 	C.b2WeldJoint_SetAngularHertz(jointId, hertz)
 }
 
-/// Get the weld joint angular stiffness in Hertz
+// Get the weld joint angular stiffness in Hertz
 fn C.b2WeldJoint_GetAngularHertz(jointId JointId) f32
 @[inline]
 pub fn weld_joint_get_angular_hertz(jointId JointId) f32 {
 	return C.b2WeldJoint_GetAngularHertz(jointId)
 }
 
-/// Set weld joint angular damping ratio, non-dimensional
+// Set weld joint angular damping ratio, non-dimensional
 fn C.b2WeldJoint_SetAngularDampingRatio(jointId JointId, dampingRatio f32)
 @[inline]
 pub fn weld_joint_set_angular_damping_ratio(jointId JointId, dampingRatio f32) {
 	C.b2WeldJoint_SetAngularDampingRatio(jointId, dampingRatio)
 }
 
-/// Get the weld joint angular damping ratio, non-dimensional
+// Get the weld joint angular damping ratio, non-dimensional
 fn C.b2WeldJoint_GetAngularDampingRatio(jointId JointId) f32
 @[inline]
 pub fn weld_joint_get_angular_damping_ratio(jointId JointId) f32 {
@@ -5032,134 +5032,134 @@ pub fn weld_joint_get_angular_damping_ratio(jointId JointId) f32 {
  * @{
  */
 
-/// Create a wheel joint
-///	@see b2WheelJointDef for details
+// Create a wheel joint
+//	@see b2WheelJointDef for details
 fn C.b2CreateWheelJoint(worldId WorldId, def &WheelJointDef) JointId
 @[inline]
 pub fn create_wheel_joint(worldId WorldId, def &WheelJointDef) JointId {
 	return C.b2CreateWheelJoint(worldId, def)
 }
 
-/// Enable/disable the wheel joint spring
+// Enable/disable the wheel joint spring
 fn C.b2WheelJoint_EnableSpring(jointId JointId, enableSpring bool)
 @[inline]
 pub fn wheel_joint_enable_spring(jointId JointId, enableSpring bool) {
 	C.b2WheelJoint_EnableSpring(jointId, enableSpring)
 }
 
-/// Is the wheel joint spring enabled?
+// Is the wheel joint spring enabled?
 fn C.b2WheelJoint_IsSpringEnabled(jointId JointId) bool
 @[inline]
 pub fn wheel_joint_is_spring_enabled(jointId JointId) bool {
 	return C.b2WheelJoint_IsSpringEnabled(jointId)
 }
 
-/// Set the wheel joint stiffness in Hertz
+// Set the wheel joint stiffness in Hertz
 fn C.b2WheelJoint_SetSpringHertz(jointId JointId, hertz f32)
 @[inline]
 pub fn wheel_joint_set_spring_hertz(jointId JointId, hertz f32) {
 	C.b2WheelJoint_SetSpringHertz(jointId, hertz)
 }
 
-/// Get the wheel joint stiffness in Hertz
+// Get the wheel joint stiffness in Hertz
 fn C.b2WheelJoint_GetSpringHertz(jointId JointId) f32
 @[inline]
 pub fn wheel_joint_get_spring_hertz(jointId JointId) f32 {
 	return C.b2WheelJoint_GetSpringHertz(jointId)
 }
 
-/// Set the wheel joint damping ratio, non-dimensional
+// Set the wheel joint damping ratio, non-dimensional
 fn C.b2WheelJoint_SetSpringDampingRatio(jointId JointId, dampingRatio f32)
 @[inline]
 pub fn wheel_joint_set_spring_damping_ratio(jointId JointId, dampingRatio f32) {
 	C.b2WheelJoint_SetSpringDampingRatio(jointId, dampingRatio)
 }
 
-/// Get the wheel joint damping ratio, non-dimensional
+// Get the wheel joint damping ratio, non-dimensional
 fn C.b2WheelJoint_GetSpringDampingRatio(jointId JointId) f32
 @[inline]
 pub fn wheel_joint_get_spring_damping_ratio(jointId JointId) f32 {
 	return C.b2WheelJoint_GetSpringDampingRatio(jointId)
 }
 
-/// Enable/disable the wheel joint limit
+// Enable/disable the wheel joint limit
 fn C.b2WheelJoint_EnableLimit(jointId JointId, enableLimit bool)
 @[inline]
 pub fn wheel_joint_enable_limit(jointId JointId, enableLimit bool) {
 	C.b2WheelJoint_EnableLimit(jointId, enableLimit)
 }
 
-/// Is the wheel joint limit enabled?
+// Is the wheel joint limit enabled?
 fn C.b2WheelJoint_IsLimitEnabled(jointId JointId) bool
 @[inline]
 pub fn wheel_joint_is_limit_enabled(jointId JointId) bool {
 	return C.b2WheelJoint_IsLimitEnabled(jointId)
 }
 
-/// Get the wheel joint lower limit
+// Get the wheel joint lower limit
 fn C.b2WheelJoint_GetLowerLimit(jointId JointId) f32
 @[inline]
 pub fn wheel_joint_get_lower_limit(jointId JointId) f32 {
 	return C.b2WheelJoint_GetLowerLimit(jointId)
 }
 
-/// Get the wheel joint upper limit
+// Get the wheel joint upper limit
 fn C.b2WheelJoint_GetUpperLimit(jointId JointId) f32
 @[inline]
 pub fn wheel_joint_get_upper_limit(jointId JointId) f32 {
 	return C.b2WheelJoint_GetUpperLimit(jointId)
 }
 
-/// Set the wheel joint limits
+// Set the wheel joint limits
 fn C.b2WheelJoint_SetLimits(jointId JointId, lower f32, upper f32)
 @[inline]
 pub fn wheel_joint_set_limits(jointId JointId, lower f32, upper f32) {
 	C.b2WheelJoint_SetLimits(jointId, lower, upper)
 }
 
-/// Enable/disable the wheel joint motor
+// Enable/disable the wheel joint motor
 fn C.b2WheelJoint_EnableMotor(jointId JointId, enableMotor bool)
 @[inline]
 pub fn wheel_joint_enable_motor(jointId JointId, enableMotor bool) {
 	C.b2WheelJoint_EnableMotor(jointId, enableMotor)
 }
 
-/// Is the wheel joint motor enabled?
+// Is the wheel joint motor enabled?
 fn C.b2WheelJoint_IsMotorEnabled(jointId JointId) bool
 @[inline]
 pub fn wheel_joint_is_motor_enabled(jointId JointId) bool {
 	return C.b2WheelJoint_IsMotorEnabled(jointId)
 }
 
-/// Set the wheel joint motor speed in radians per second
+// Set the wheel joint motor speed in radians per second
 fn C.b2WheelJoint_SetMotorSpeed(jointId JointId, motorSpeed f32)
 @[inline]
 pub fn wheel_joint_set_motor_speed(jointId JointId, motorSpeed f32) {
 	C.b2WheelJoint_SetMotorSpeed(jointId, motorSpeed)
 }
 
-/// Get the wheel joint motor speed in radians per second
+// Get the wheel joint motor speed in radians per second
 fn C.b2WheelJoint_GetMotorSpeed(jointId JointId) f32
 @[inline]
 pub fn wheel_joint_get_motor_speed(jointId JointId) f32 {
 	return C.b2WheelJoint_GetMotorSpeed(jointId)
 }
 
-/// Set the wheel joint maximum motor torque, typically in newton-meters
+// Set the wheel joint maximum motor torque, typically in newton-meters
 fn C.b2WheelJoint_SetMaxMotorTorque(jointId JointId, torque f32)
 @[inline]
 pub fn wheel_joint_set_max_motor_torque(jointId JointId, torque f32) {
 	C.b2WheelJoint_SetMaxMotorTorque(jointId, torque)
 }
 
-/// Get the wheel joint maximum motor torque, typically in newton-meters
+// Get the wheel joint maximum motor torque, typically in newton-meters
 fn C.b2WheelJoint_GetMaxMotorTorque(jointId JointId) f32
 @[inline]
 pub fn wheel_joint_get_max_motor_torque(jointId JointId) f32 {
 	return C.b2WheelJoint_GetMaxMotorTorque(jointId) 
 }
 
-/// Get the wheel joint current motor torque, typically in newton-meters
+// Get the wheel joint current motor torque, typically in newton-meters
 fn C.b2WheelJoint_GetMotorTorque(jointId JointId) f32
 @[inline]
 pub fn wheel_joint_get_motor_torque(jointId JointId) f32 {
