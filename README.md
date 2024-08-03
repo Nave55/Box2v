@@ -1,7 +1,7 @@
 # Box2v
 Vlang bindings for Box2d
 
-### Only for windows atm
+#### Only tested on windows atm
 
 Notes- 
 
