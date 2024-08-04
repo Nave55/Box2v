@@ -12,10 +12,6 @@ $if windows {
 	#flag -lbox2d
 }
 
-$if linux {
-	#flag -l:libbox2d.a
-}
-
 // start math_functions
 
 const pi = 3.14159265359
