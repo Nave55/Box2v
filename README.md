@@ -1,7 +1,7 @@
 # Box2v
 Vlang bindings for Box2d
 
-#### Only tested on windows atm
+#### Only tested on windows atm. Need to add library for linux.
 
 Notes- 
 
