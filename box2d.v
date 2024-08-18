@@ -10,6 +10,7 @@ import math
 
 $if windows {
 	#flag -lbox2d
+	#flag -lmsvcrtd
 }
 
 // start math_functions
@@ -18,7 +19,7 @@ const pi = 3.14159265359
 
 // 2D vector
 // This can be used to represent a point or free vector
-@[typedef]
+@[typedef] 
 struct C.b2Vec2 {
 pub mut:
 	// coordinates
@@ -622,9 +623,9 @@ pub type AssertFcn = fn(&char, &char, int) int
 
 // This allows the user to override the allocation functions. These should be
 //	set during application startup.
-fn C.b2SetAllocator(allocFcn AllocFcn, freeFcn FreeFcn)
+fn C.b2SetAllocator(allocFcn &AllocFcn, freeFcn &FreeFcn)
 @[inline]
-pub fn set_allocator(allocFcn AllocFcn, freeFcn FreeFcn) {
+pub fn set_allocator(allocFcn &AllocFcn, freeFcn &FreeFcn) {
 	C.b2SetAllocator(allocFcn, freeFcn)
 }
 
@@ -637,9 +638,9 @@ pub fn get_byte_count() int {
 
 // Override the default assert callback
 //	assertFcn a non-null assert callback
-fn C.b2SetAssertFcn(assertFcn AssertFcn)
+fn C.b2SetAssertFcn(assertFcn &AssertFcn)
 @[inline]
-pub fn set_assert_fcn(assertFcn AssertFcn) {
+pub fn set_assert_fcn(assertFcn &AssertFcn) {
 	C.b2SetAssertFcn(assertFcn)
 }
 
@@ -1130,11 +1131,11 @@ pub type TOIInput = C.b2TOIInput
 
 // Describes the TOI output
 pub enum TOIState {
-	to_i_state_unknown = 0
-	to_i_state_failed = 1
-	to_i_state_overlapped = 2
-	to_i_state_hit = 3
-	to_i_state_separated = 4
+	to_i_state_unknown
+	to_i_state_failed
+	to_i_state_overlapped
+	to_i_state_hit
+	to_i_state_separated
 }
 
 // Output parameters for b2TimeOfImpact.
@@ -1292,8 +1293,8 @@ pub type DynamicTree = C.b2DynamicTree
 
 
 pub type TreeQueryCallbackFcn = fn(int, int, voidptr) bool
-pub type TreeRayCastCallbackFcn = fn(RayCastInput, int, int, voidptr) f32
-pub type TreeShapeCastCallbackFcn = fn(ShapeCastInput, int, int, voidptr) f32
+pub type TreeRayCastCallbackFcn = fn(&RayCastInput, int, int, voidptr) f32
+pub type TreeShapeCastCallbackFcn = fn(&ShapeCastInput, int, int, voidptr) f32
 
 
 // Validate ray cast input data (NaN, etc)
@@ -1316,7 +1317,7 @@ pub fn make_polygon(hull &Hull, radius f32) Polygon {
 fn C.b2MakeOffsetPolygon(hull &Hull, radius f32, transform Transform) Polygon
 @[inline]
 pub fn make_offset_polygon(hull &Hull, radius f32, transform Transform) Polygon {
-	return C.b2MakePolygon(hull, radius)
+	return C.b2MakeOffsetPolygon(hull, radius, transform)
 }
 
 // Make a square polygon, bypassing the need for a convex hull.
@@ -1674,9 +1675,9 @@ pub fn dynamic_tree_enlarge_proxy(tree &DynamicTree, proxyId int, aabb AABB) {
 
 // Query an AABB for overlapping proxies. The callback class
 // is called for each proxy that overlaps the supplied AABB.
-fn C.b2DynamicTree_Query(tree &DynamicTree, aabb AABB, maskBits u32, callback &TreeQueryCallbackFcn, context voidptr)
+fn C.b2DynamicTree_Query(tree &DynamicTree, aabb AABB, maskBits u32, callback TreeQueryCallbackFcn, context voidptr)
 @[inline]
-pub fn dynamic_tree_query(tree &DynamicTree, aabb AABB, maskBits u32, callback &TreeQueryCallbackFcn, context voidptr) {
+pub fn dynamic_tree_query(tree &DynamicTree, aabb AABB, maskBits u32, callback TreeQueryCallbackFcn, context voidptr) {
 	C.b2DynamicTree_Query(tree, aabb, maskBits, callback, context)
 }
 
@@ -1691,9 +1692,9 @@ pub fn dynamic_tree_query(tree &DynamicTree, aabb AABB, maskBits u32, callback &
 //	@param maskBits filter bits: `bool accept = (maskBits & node->categoryBits) != 0;`
 // @param callback a callback class that is called for each proxy that is hit by the ray
 //	@param context user context that is passed to the callback
-fn C.b2DynamicTree_RayCast(tree &DynamicTree, input &RayCastInput, maskBits u32, callback &TreeRayCastCallbackFcn, context voidptr)
+fn C.b2DynamicTree_RayCast(tree &DynamicTree, input &RayCastInput, maskBits u32, callback TreeRayCastCallbackFcn, context voidptr)
 @[inline]
-pub fn dynamic_tree_ray_cast(tree &DynamicTree, input &RayCastInput, maskBits u32, callback &TreeRayCastCallbackFcn, context voidptr) {
+pub fn dynamic_tree_ray_cast(tree &DynamicTree, input &RayCastInput, maskBits u32, callback TreeRayCastCallbackFcn, context voidptr) {
 	C.b2DynamicTree_RayCast(tree, input, maskBits, callback, context)
 }
 
@@ -1799,8 +1800,8 @@ pub fn dynamic_tree_get_aabb(tree &DynamicTree , proxyId int) AABB {
 
 // start types 
 
-type TaskCallback =        fn(int, int, u32, voidptr) 
-type EnqueueTaskCallback = fn(TaskCallback, int, int, voidptr, voidptr) voidptr
+type TaskCallback =        fn(int, int, u32, voidptr)
+type EnqueueTaskCallback = fn(&TaskCallback, int, int, voidptr, voidptr) voidptr
 type FinishTaskCallback =  fn(voidptr, voidptr)
 
 // Result from b2World_RayCastClosest
@@ -1896,11 +1897,12 @@ pub enum BodyType {
 //	Body definitions are temporary objects used to bundle creation parameters.
 // Must be initialized using b2DefaultBodyDef().
 // @ingroup body
+
 @[typedef] 
 struct C.b2BodyDef {
 pub mut:
 	// The body type: static, kinematic, or dynamic.
-	types BodyType 
+	type_ BodyType 
 
 	// The initial world position of the body. Bodies should be created with the desired position.
 	// @note Creating bodies at the origin and then moving them nearly doubles the cost of body creation, especially
@@ -2763,10 +2765,10 @@ struct C.b2ContactData {
 
 pub type ContactData = C.b2ContactData
 
-pub type CustomFilterFcn = fn(shapeIdA ShapeId, shapeIdB ShapeId, context voidptr) bool
-pub type PreSolveFcn = fn(shapeIdA ShapeId, shapeIdB ShapeId, manifold Manifold, context voidptr) bool
-pub type OverlapResultFcn = fn(shapeId ShapeId, context voidptr) bool
-pub type CastResultFcn = fn(shapeId ShapeId, point Vec2, normal Vec2, fraction f32, context voidptr) f32
+pub type CustomFilterFcn = fn(ShapeId, ShapeId, voidptr) bool
+pub type PreSolveFcn = fn(ShapeId, ShapeId, Manifold, voidptr) bool
+pub type OverlapResultFcn = fn(ShapeId, voidptr) bool
+pub type CastResultFcn = fn(ShapeId, Vec2, Vec2, f32, voidptr) f32
 
 // These colors are used for debug draw.
 pub enum HexColor {
@@ -3169,27 +3171,27 @@ pub fn world_get_contact_events(worldId WorldId) ContactEvents {
 	return C.b2World_GetContactEvents(worldId)
 }
 // Overlap test for all shapes that *potentially* overlap the provided AABB
-fn C.b2World_OverlapAABB(worldId WorldId, aabb AABB, filter QueryFilter, fcn &OverlapResultFcn, context voidptr)
+fn C.b2World_OverlapAABB(worldId WorldId, aabb AABB, filter QueryFilter, fcn OverlapResultFcn, context voidptr)
 @[inline]
-pub fn world_overlap_aabb(worldId WorldId, aabb AABB, filter QueryFilter, fcn &OverlapResultFcn, context voidptr) {
+pub fn world_overlap_aabb(worldId WorldId, aabb AABB, filter QueryFilter, fcn OverlapResultFcn, context voidptr) {
 	C.b2World_OverlapAABB(worldId, aabb, filter, fcn, context)
 }
 // Overlap test for for all shapes that overlap the provided circle
-fn C.b2World_OverlapCircle(worldId WorldId, circle &Circle, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr)
+fn C.b2World_OverlapCircle(worldId WorldId, circle &Circle, transform Transform, filter QueryFilter, fcn OverlapResultFcn, context voidptr)
 @[inline]
-pub fn world_overlap_circle(worldId WorldId, circle &Circle, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr) {
+pub fn world_overlap_circle(worldId WorldId, circle &Circle, transform Transform, filter QueryFilter, fcn OverlapResultFcn, context voidptr) {
 	C.b2World_OverlapCircle(worldId, circle, transform, filter, fcn, context)
 }
 // Overlap test for all shapes that overlap the provided capsule
-fn C.b2World_OverlapCapsule(worldId WorldId, capsule &Capsule, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr)
+fn C.b2World_OverlapCapsule(worldId WorldId, capsule &Capsule, transform Transform, filter QueryFilter, fcn OverlapResultFcn, context voidptr)
 @[inline]
-pub fn world_overlap_capsule(worldId WorldId, capsule &Capsule, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr) {
+pub fn world_overlap_capsule(worldId WorldId, capsule &Capsule, transform Transform, filter QueryFilter, fcn OverlapResultFcn, context voidptr) {
 	C.b2World_OverlapCapsule(worldId, capsule, transform, filter, fcn, context)
 }
 // Overlap test for all shapes that overlap the provided polygon
-fn C.b2World_OverlapPolygon(worldId WorldId, polygon &Polygon, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr)
+fn C.b2World_OverlapPolygon(worldId WorldId, polygon &Polygon, transform Transform, filter QueryFilter, fcn OverlapResultFcn, context voidptr)
 @[inline]
-pub fn world_overlap_polygon(worldId WorldId, polygon &Polygon, transform Transform, filter QueryFilter, fcn &OverlapResultFcn, context voidptr) {
+pub fn world_overlap_polygon(worldId WorldId, polygon &Polygon, transform Transform, filter QueryFilter, fcn OverlapResultFcn, context voidptr) {
 	C.b2World_OverlapPolygon(worldId, polygon, transform, filter, fcn, context)
 }
 // Cast a ray into the world to collect shapes in the path of the ray.
@@ -3202,9 +3204,9 @@ pub fn world_overlap_polygon(worldId WorldId, polygon &Polygon, transform Transf
 // @param fcn A user implemented callback function
 // @param context A user context that is passed along to the callback function
 //	@note The callback function may receive shapes in any order
-fn C.b2World_CastRay(worldId WorldId, origin Vec2, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr)
+fn C.b2World_CastRay(worldId WorldId, origin Vec2, translation Vec2, filter QueryFilter, fcn CastResultFcn, context voidptr)
 @[inline]
-pub fn world_cast_ray(worldId WorldId, origin Vec2, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr) {
+pub fn world_cast_ray(worldId WorldId, origin Vec2, translation Vec2, filter QueryFilter, fcn CastResultFcn, context voidptr) {
 	C.b2World_CastRay(worldId, origin, translation, filter, fcn, context)
 }
 // Cast a ray into the world to collect the closest hit. This is a convenience function.
@@ -3215,21 +3217,21 @@ pub fn world_cast_ray_closest(worldId WorldId, origin Vec2, translation Vec2, fi
 	return C.b2World_CastRayClosest(worldId, origin, translation, filter)
 }
 // Cast a circle through the world. Similar to a cast ray except that a circle is cast instead of a point.
-fn C.b2World_CastCircle(worldId WorldId, circle &Circle, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr)
+fn C.b2World_CastCircle(worldId WorldId, circle &Circle, originTransform Transform, translation Vec2, filter QueryFilter, fcn CastResultFcn, context voidptr)
 @[inline]
-pub fn world_cast_circle(worldId WorldId, circle &Circle, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr) {
+pub fn world_cast_circle(worldId WorldId, circle &Circle, originTransform Transform, translation Vec2, filter QueryFilter, fcn CastResultFcn, context voidptr) {
 	C.b2World_CastCircle(worldId, circle, originTransform, translation, filter, fcn, context)
 }
 // Cast a capsule through the world. Similar to a cast ray except that a capsule is cast instead of a point.
-fn C.b2World_CastCapsule(worldId WorldId, capsule &Capsule, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr)
+fn C.b2World_CastCapsule(worldId WorldId, capsule &Capsule, originTransform Transform, translation Vec2, filter QueryFilter, fcn CastResultFcn, context voidptr)
 @[inline]
-pub fn world_cast_capsule(worldId WorldId, capsule &Capsule, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr) {
+pub fn world_cast_capsule(worldId WorldId, capsule &Capsule, originTransform Transform, translation Vec2, filter QueryFilter, fcn CastResultFcn, context voidptr) {
 	C.b2World_CastCapsule(worldId, capsule, originTransform, translation, filter, fcn, context)
 }
 // Cast a polygon through the world. Similar to a cast ray except that a polygon is cast instead of a point.
-fn C.b2World_CastPolygon(worldId WorldId, polygon &Polygon, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr)
+fn C.b2World_CastPolygon(worldId WorldId, polygon &Polygon, originTransform Transform, translation Vec2, filter QueryFilter, fcn CastResultFcn, context voidptr)
 @[inline]
-pub fn world_cast_polygon(worldId WorldId, polygon &Polygon, originTransform Transform, translation Vec2, filter QueryFilter, fcn &CastResultFcn, context voidptr) {
+pub fn world_cast_polygon(worldId WorldId, polygon &Polygon, originTransform Transform, translation Vec2, filter QueryFilter, fcn CastResultFcn, context voidptr) {
 	C.b2World_CastPolygon(worldId, polygon, originTransform, translation, filter, fcn, context)
 }
 // Enable/disable sleep. If your application does not need sleeping, you can gain some performance
@@ -3266,15 +3268,15 @@ pub fn world_set_hit_event_threshold(worldId WorldId, value f32) {
 	C.b2World_SetHitEventThreshold(worldId, value)
 }
 // Register the custom filter callback. This is optional.
-fn C.b2World_SetCustomFilterCallback(worldId WorldId, fcn &CustomFilterFcn, context voidptr)
+fn C.b2World_SetCustomFilterCallback(worldId WorldId, fcn CustomFilterFcn, context voidptr)
 @[inline]
-pub fn world_set_custom_filter_callback(worldId WorldId, fcn &CustomFilterFcn, context voidptr) {
+pub fn world_set_custom_filter_callback(worldId WorldId, fcn CustomFilterFcn, context voidptr) {
 	C.b2World_SetCustomFilterCallback(worldId, fcn, context)
 }
 // Register the pre-solve callback. This is optional.b2World_SetPreSolveCallback(worldId WorldId, fcn &PreSolveFcn, context voidptr)
-fn C.b2World_SetPreSolveCallback(worldId WorldId, fcn &PreSolveFcn, context voidptr)
+fn C.b2World_SetPreSolveCallback(worldId WorldId, fcn PreSolveFcn, context voidptr)
 @[inline]
-pub fn world_set_pre_solve_callback(worldId WorldId, fcn &PreSolveFcn, context voidptr) {
+pub fn world_set_pre_solve_callback(worldId WorldId, fcn PreSolveFcn, context voidptr) {
 	C.b2World_SetPreSolveCallback(worldId, fcn, context)
 }
 // Set the gravity vector for the entire world. Box2D has no concept of an up direction and this
