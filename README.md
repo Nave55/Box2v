@@ -1,8 +1,10 @@
 # Box2v
 Vlang bindings for Box2d
 
-#### Only tested on windows atm. Need to add .a library for linux.
+#### Only tested on windows atm using msvc.
 
 Notes- 
 
-Renamed 'type' field in b2BodyDef to 'types' to deal with restricted name conflict.
+Compile with -cc msvc
+
+Renamed 'type' field in b2BodyDef to 'type_' to deal with restricted name conflict.
