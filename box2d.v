@@ -15,7 +15,7 @@ $if windows {
 
 // start math_functions
 
-const pi = 3.14159265359
+pub const pi = 3.14159265359
 
 // 2D vector
 // This can be used to represent a point or free vector
@@ -72,10 +72,12 @@ pub mut:
 
 pub type AABB = C.b2AABB
 
-pub const vec2_zero = Vec2{}
-pub const rot_identity = Rot{1.0, 0.0}
-pub const transform_identity = Transform{Vec2{0.0, 0.0}, Rot{1.0, 0.0}}
-pub const mat22_zero = Mat22{}
+pub const (
+	vec2_zero = Vec2{}
+	rot_identity = Rot{1.0, 0.0}
+	transform_identity = Transform{Vec2{0.0, 0.0}, Rot{1.0, 0.0}}
+	mat22_zero = Mat22{}
+)
 
 // return the minimum of two floats
 fn C.b2MinFloat(a f32, b f32) f32
@@ -771,11 +773,13 @@ pub mut:
 
 pub type ChainId = C.b2ChainId
 
-pub const null_world_id =  WorldId{0, 0}
-pub const null_body_id = BodyId{0, 0, 0}
-pub const null_shape_id = ShapeId{0, 0, 0}
-pub const null_joint_id = JointId{0, 0, 0}
-pub const null_chain_id = ChainId{0, 0, 0}
+pub const (
+	null_world_id =  WorldId{0, 0}
+	null_body_id =   BodyId{0, 0, 0}
+	null_shape_id =  ShapeId{0, 0, 0}
+	null_joint_id =  JointId{0, 0, 0}
+	null_chain_id =  ChainId{0, 0, 0}
+)
 
 @[inline]
 fn is_null[T](id T) bool {
