@@ -142,7 +142,7 @@ typedef enum b2BodyType
 typedef struct b2BodyDef
 {
 	/// The body type: static, kinematic, or dynamic.
-	b2BodyType types;
+	b2BodyType type_;
 
 	/// The initial world position of the body. Bodies should be created with the desired position.
 	/// @note Creating bodies at the origin and then moving them nearly doubles the cost of body creation, especially
